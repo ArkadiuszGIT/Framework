@@ -3,13 +3,189 @@
 {% block title %}Home{% endblock %}
 
 {% block body %}
+	<script src="/js/hideShowPassword.min.js"></script>
+    <script src="/js/app.js"></script>
+	
+	<script>
+			$(document).ready(function() {
 
-    <h1>Welcome</h1>
+				/**
+				 * Validate the form
+				 */
+				$('#form1').validate({
+					rules: {
+						name: 'required',
+						email: {
+							required: true,
+							email: true,
+							remote: '/account/validate-email'
+						},
+						password: {
+							required: true,
+							minlength: 6,
+							validPassword: true
+						}
+					},
+					messages: {
+						email: {
+							remote: 'email already taken'
+						}
+					}
+				});
 
-    {% if current_user %}
-        Hello {{ current_user.name }}.
-    {% else %}
-        <a href="/signup/new">Sign up</a> or <a href="/login">log in</a>.
-    {% endif %}
+
+				/**
+				  * Show password toggle button
+				  */
+				$('#password').hideShowPassword({
+					show: false,
+					innerToggle: 'focus'
+				});
+			});		
+	</script>
+
+	<header>
+	
+		<nav class="navbar navbar-dark bg-homebudget navbar-expand-md">
+		
+			<a class="navbar-brand" href="/Home/index"><img src="/img/home.png" alt=""></a>
+			
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainmenu" aria-controls="mainmenu" aria-expanded="false" aria-label="Przełącznik nawigacji">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+		
+			<div class="collapse navbar-collapse" id="mainmenu">
+			
+				<ul class="navbar-nav mr-auto"></ul>
+			
+				<form action="/login/create" class="form-inline navbar-right"  method="post">
+				
+					{% for message in flash_messages %}
+						<div class="error">
+							{{ message.body }}
+						</div>
+					{% endfor %}
+					
+					<div class="row">
+						<div class="col-md-5">		
+							<div class="inputWithIcon inputIconBg">
+								<input type="text" class="form-control mr-1" id="log" name="log" placeholder="login">
+								<i class="fa fa-user"  aria-hidden="true"></i>
+							</div>						
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" name="remember_me" {% if remember_me %} checked="checked"{% endif %} />Remember me
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-5">					
+							<div class="inputWithIcon inputIconBg">
+								<input type="password" class="form-control mr-1" id="logPassword" name="logPassword" placeholder="hasło">
+								<i class="fa fa-key"  aria-hidden="true"></i>
+							</div>
+							<div class="forgotpassword">
+								<a href="/password/forgot">Forgot password?</a>
+							</div>
+						</div>
+					</div>							
+					
+					
+					<button type="submit" class="btn btn-light navbar-btn" onclick=""><i class="fa fa-sign-in"  aria-hidden="true"></i>   Zaloguj się</button>
+				
+				</form>
+			
+			</div>
+		
+		</nav>
+		
+	</header>
+	
+	<main>
+	
+		{% for message in flash_messages %}
+			<div class="komunikat">
+				{{ message.body }}
+			</div>
+		{% endfor %}
+	
+		<section class="registration">
+		
+			<div class="container">
+		
+				<div class="row">
+		
+					<div class="col-md-5 offset-md-1">
+				
+						<header>
+					
+							<h1>Witaj w HomeBudget.com</h1>
+							<p>Aplikacja HomeBudget.com jest prostą w użytkowaniu, darmową aplikacją dostarczającą możliwość prowadzenia ewidencji przychodów i wydatków online, również przy pomocy smartfonów. Pozwoli Ci to zapanować nad swoimi finansami i zacząć oszczędzać. Prosta ewidencja twoich przychodów i wydatków umożliwi Ci zaoszczędzenie naprawdę dużych pieniędzy i lepsze ich zagospodarowanie!</p>
+							
+						</header>		
+						
+					</div>
+						
+					<div class="col-md-5 offset-md-1">
+			
+						{% if user.errors is not empty %}
+							<p>Errors:</p>
+							<ul>
+								{% for error in user.errors %}
+									<li>{{ error }}</li>
+								{% endfor %}
+							</ul>
+						{% endif %}
+						<form action="/signup/create" class="main-form" id="form1" name="registration" method="post">
+						
+						<header>
+					
+							<h1>Dołącz do programu:</h1>
+			
+						</header>
+						
+							<div class="controls">
+									<div class="col-6">
+										<div class="form-group">
+											<div class="registrationInputWithIcon inputIconBg">
+												<input type="text" class="form-control inputRejestracja" autofocus value="{{ user.name }}" name="name" placeholder="login" required/>
+												<i class="fa fa-user"  aria-hidden="true"></i>
+											</div>
+										</div>
+									</div>
+									<div class="col-6">
+										<div class="form-group">
+											<div class="registrationInputWithIcon inputIconBg">
+												<input type="email" class="form-control inputRejestracja" value="{{ user.email }}" name="email" placeholder="email" required/>
+												<i class="fa fa-envelope"  aria-hidden="true"></i>
+											</div>
+										</div>
+									</div>
+									<div class="col-6">
+										<div class="form-group">
+											<div class="registrationInputWithIcon inputIconBg">
+												<input type="password" class="form-control inputRejestracja"" id="password" name="password" placeholder="hasło" required/>
+												<i class="fa fa-key"  aria-hidden="true"></i>
+											</div>
+										</div>
+									</div>
+									<div class="col-12">
+											<br/><div class="g-recaptcha" data-sitekey="6LcXWr0UAAAAAFc98HneJoMhA6OeYn8uWQKjJvUY" ></div>
+									</div>
+									<div class="col-12">
+											<button type="submit" class="btn btn-light btn-block" id="registration" ><i class="fa fa-user-plus"  aria-hidden="true"></i>   Rejestracja</button>
+									</div>
+							</div>
+						</form>
+					</div>
+				
+				</div>
+				
+			</div>	
+
+		</section>
+				
+	</main>
 
 {% endblock %}

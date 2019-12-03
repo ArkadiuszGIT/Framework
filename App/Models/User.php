@@ -53,7 +53,7 @@ class User extends \Core\Model
             $hashed_token = $token->getHash();
             $this->activation_token = $token->getValue();
 
-            $sql = 'INSERT INTO users (name, email, password_hash, activation_hash)
+            $sql = 'INSERT INTO users (login, email, password_hash, activation_hash)
                     VALUES (:name, :email, :password_hash, :activation_hash)';
 
             $db = static::getDB();
@@ -121,7 +121,7 @@ class User extends \Core\Model
         $user = static::findByEmail($email);
 
         if ($user) {
-            if ($user->id != $ignore_id) {
+            if ($user->userID != $ignore_id) {
                 return true;
             }
         }
@@ -183,7 +183,7 @@ class User extends \Core\Model
      */
     public static function findByID($id)
     {
-        $sql = 'SELECT * FROM users WHERE id = :id';
+        $sql = 'SELECT * FROM users WHERE userID = :id';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
@@ -260,7 +260,7 @@ class User extends \Core\Model
         $sql = 'UPDATE users
                 SET password_reset_hash = :token_hash,
                     password_reset_expires_at = :expires_at
-                WHERE id = :id';
+                WHERE userID = :id';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
@@ -421,7 +421,7 @@ class User extends \Core\Model
         if (empty($this->errors)) {
 
             $sql = 'UPDATE users
-                    SET name = :name,
+                    SET login = :name,
                         email = :email';
 
             // Add password if it's set
@@ -429,7 +429,7 @@ class User extends \Core\Model
                 $sql .= ', password_hash = :password_hash';
             }
 
-            $sql .= "\nWHERE id = :id";
+            $sql .= "\nWHERE userID = :id";
 
 
             $db = static::getDB();

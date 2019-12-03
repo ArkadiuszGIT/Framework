@@ -1,0 +1,12 @@
+
+.icon-user:before { content: '\e800'; } /* '' */
+.icon-th:before { content: '\e801'; } /* '' */
+.icon-mail:before { content: '\e802'; } /* '' */
+.icon-home:before { content: '\e803'; } /* '' */
+.icon-home-outline:before { content: '\e804'; } /* '' */
+.icon-mail-alt:before { content: '\f0e0'; } /* '' */
+.icon-id-card:before { content: '\f2c2'; } /* '' */
+.icon-facebook-rect:before { content: '\f301'; } /* '' */
+.icon-twitter-bird:before { content: '\f303'; } /* '' */
+.icon-googleplus-rect:before { content: '\f309'; } /* '' */
+.icon-youtube:before { content: '\f313'; } /* '' */

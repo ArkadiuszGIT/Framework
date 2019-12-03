@@ -20,19 +20,19 @@ class Config
      * Database name
      * @var string
      */
-    const DB_NAME = 'mvclogin';
+    const DB_NAME = 'homebudget';
 
     /**
      * Database user
      * @var string
      */
-    const DB_USER = 'mvcuser';
+    const DB_USER = 'root';
 
     /**
      * Database password
      * @var string
      */
-    const DB_PASSWORD = 'Wakkera%18';
+    const DB_PASSWORD = '';
 
     /**
      * Show or hide error messages on screen

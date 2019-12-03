@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use \Core\View;
 use \App\Models\User;
+use \App\Flash;
 
 /**
  * Signup controller
@@ -12,17 +13,6 @@ use \App\Models\User;
  */
 class Signup extends \Core\Controller
 {
-
-    /**
-     * Show the signup page
-     *
-     * @return void
-     */
-    public function newAction()
-    {
-        View::renderTemplate('Signup/new.html');
-    }
-
     /**
      * Sign up a new user
      *
@@ -35,12 +25,14 @@ class Signup extends \Core\Controller
         if ($user->save()) {
 
             $user->sendActivationEmail();
-
-            $this->redirect('/signup/success');
+			
+			Flash::addMessage('Success! Thank you for signing up. Please check your email to activate your account.');
+			
+			$this->redirect('/Home/index');
 
         } else {
 
-            View::renderTemplate('Signup/new.html', [
+            View::renderTemplate('Home/index.html', [
                 'user' => $user
             ]);
 
