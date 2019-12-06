@@ -79,33 +79,51 @@ class User extends \Core\Model
     {
         // Name
         if ($this->name == '') {
-            $this->errors[] = 'Name is required';
+            $this->errors[] = 'Podaj nazwę użytkownika!';
+        }
+		if (static::loginExists($this->name, $this->id ?? null)) {
+            $this->errors[] = 'Użytkownik o tej nazwie jest już zarejestrowany!';
         }
 
         // email address
         if (filter_var($this->email, FILTER_VALIDATE_EMAIL) === false) {
-            $this->errors[] = 'Invalid email';
+            $this->errors[] = 'Podaj poprawny adres e-mail!';
         }
         if (static::emailExists($this->email, $this->id ?? null)) {
-            $this->errors[] = 'email already taken';
+            $this->errors[] = 'Email o tej nazwie jest już zarejestrowany!';
         }
 
         // Password
         if (isset($this->password)) {
 
             if (strlen($this->password) < 6) {
-                $this->errors[] = 'Please enter at least 6 characters for the password';
+                $this->errors[] = 'Hasło musi posiadać od 6 do 20 znaków!';
+            }
+			
+			 if (strlen($this->password) > 20) {
+                $this->errors[] = 'Hasło musi posiadać od 6 do 20 znaków!';
             }
 
             if (preg_match('/.*[a-z]+.*/i', $this->password) == 0) {
-                $this->errors[] = 'Password needs at least one letter';
+                $this->errors[] = 'Hasło musi zawierać conajmniej jedną literę';
             }
 
             if (preg_match('/.*\d+.*/i', $this->password) == 0) {
-                $this->errors[] = 'Password needs at least one number';
+                $this->errors[] = 'Hasło musi zawierać conajmniej jedną cyfrę';
             }
 
         }
+		
+		$secret = "6LcXWr0UAAAAANebakfCBeWCgj-R25FwIg2E_Kuj";
+	
+		$check = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$secret.'&response='.$_POST['g-recaptcha-response']);
+	
+		$check = json_decode($check);
+		
+		if ($check->success==false)
+		{
+			$this->errors[] = 'Potwierdź, że nie jesteś botem!';
+		}		
     }
 
     /**
@@ -116,6 +134,33 @@ class User extends \Core\Model
      *
      * @return boolean  True if a record already exists with the specified email, false otherwise
      */
+	public static function loginExists($login, $ignore_id = null)
+    {
+        $user = static::findByLogin($login);
+
+        if ($user) {
+            if ($user->userID != $ignore_id) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+	public static function findByLogin($login)
+    {
+        $sql = 'SELECT * FROM users WHERE login = :login';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':login', $login, PDO::PARAM_STR);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+
+        $stmt->execute();
+
+        return $stmt->fetch();
+    }
+
     public static function emailExists($email, $ignore_id = null)
     {
         $user = static::findByEmail($email);

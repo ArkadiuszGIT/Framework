@@ -2,19 +2,36 @@
 
 {% block title %}Home{% endblock %}
 
-{% block body %}
-	<script src="/js/hideShowPassword.min.js"></script>
-    <script src="/js/app.js"></script>
+{% block footer %}
+    <script src="/js/hideShowPassword.min.js"></script>
+    <script src="/js/application.js"></script>
 	
 	<script>
+			function recaptchaCallback() {
+				$('#hiddenRecaptcha').valid();
+			};
 			$(document).ready(function() {
-
+					jQuery.validator.addMethod("validUserName", function(value, element) {
+       
+							if (value != '') {
+								return this.optional( element ) || /^[a-zA-Z0-9\.]+$/.test( value );
+							}
+						},
+						'Dozwolone są tylko litery, cyfry i kropki!'
+					);
 				/**
 				 * Validate the form
 				 */
 				$('#form1').validate({
+					ignore: ".ignore",
 					rules: {
-						name: 'required',
+					    name: {
+							required: true,
+							minlength: 3,
+							maxlength: 20,
+							validUserName: true,
+							remote: '/account/validate-login'
+						},
 						email: {
 							required: true,
 							email: true,
@@ -23,12 +40,35 @@
 						password: {
 							required: true,
 							minlength: 6,
+							maxlength: 20,
 							validPassword: true
+						},
+						hiddenRecaptcha: {
+							required: function () {
+								if (grecaptcha.getResponse() == '') {
+									return true;
+								} else {
+									return false;
+								}
+							}
 						}
 					},
 					messages: {
+					    name: {
+							required: 'Podaj nazwę użytkownika!',
+							minlength: 'Nazwa użytkownika powinna zawierać od 3 do 20 znaków!',
+							maxlength: 'Nazwa użytkownika powinna zawierać od 3 do 20 znaków!',
+							remote: 'Użytkownik o tej nazwie jest już zarejestrowany!'
+						},
 						email: {
-							remote: 'email already taken'
+							required: 'Podaj email!',
+							email: 'Podaj poprawny adres email!',
+							remote: 'Email o tej nazwie jest już zarejestrowany!'
+						},
+						password: {
+							required: 'Podaj hasło!',
+							minlength: 'Hasło powinno zawierać od 6 do 20 znaków!',
+							maxlength: 'Hasło powinno zawierać od 6 do 20 znaków!'
 						}
 					}
 				});
@@ -39,11 +79,12 @@
 				  */
 				$('#password').hideShowPassword({
 					show: false,
-					innerToggle: 'focus'
+					innerToggle: 'focus',
 				});
 			});		
 	</script>
-
+{% endblock %}	
+{% block body %}
 	<header>
 	
 		<nav class="navbar navbar-dark bg-homebudget navbar-expand-md">
@@ -171,7 +212,8 @@
 										</div>
 									</div>
 									<div class="col-12">
-											<br/><div class="g-recaptcha" data-sitekey="6LcXWr0UAAAAAFc98HneJoMhA6OeYn8uWQKjJvUY" ></div>
+											<br/><div class="g-recaptcha" data-sitekey="6LcXWr0UAAAAAFc98HneJoMhA6OeYn8uWQKjJvUY" data-callback="recaptchaCallback"></div>
+											<input type="hidden" class="hiddenRecaptcha required" name="hiddenRecaptcha" id="hiddenRecaptcha">
 									</div>
 									<div class="col-12">
 											<button type="submit" class="btn btn-light btn-block" id="registration" ><i class="fa fa-user-plus"  aria-hidden="true"></i>   Rejestracja</button>
@@ -185,7 +227,7 @@
 			</div>	
 
 		</section>
-				
+
 	</main>
 
 {% endblock %}

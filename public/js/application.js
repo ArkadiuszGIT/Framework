@@ -1,3 +1,4 @@
+
 $.validator.addMethod('validPassword',
     function(value, element, param) {
 
@@ -12,7 +13,7 @@ $.validator.addMethod('validPassword',
 
         return true;
     },
-    'Must contain at least one letter and one number'
+    'Hasło musi zawierać conajmniej jedną literę i jeden numer'
 );
 
 Number.prototype.round = function(miejsc)
