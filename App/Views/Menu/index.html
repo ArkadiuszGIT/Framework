@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Menu{% endblock %}
+
+{% block body %}
+	<header>
+	
+		<nav class="navbar navbar-dark bg-homebudget navbar-expand-lg">
+		
+			<a class="navbar-brand" href="/Menu/index"><img src="/img/home.png" alt=""></a>
+			
+			<div class="uzytkownik">
+					Zalogowany jako: {{ user.login }}
+			</div>
+		
+		</nav>
+		
+	</header>
+	
+	<main class="main-page">
+	
+		<article>
+				
+			<div class="container">
+			
+				<div class="row">
+	
+					<div class="col-lg-6 text-center menu">
+					
+						<header>
+					
+							<h1>Menu główne</h1>
+							
+						</header>
+						
+						<div class="col-12">				
+							<button type="button" class="btn btn-light menuButton" onClick="window.location.href='addIncome.php'"><i class="fa fa-dollar"  aria-hidden="true"></i>   Dodaj przychód</button>
+						</div>	
+						
+						<div class="col-12">		
+							<button type="button" class="btn btn-light menuButton" onClick="window.location.href='addExpense.php'"><i class="fa fa-shopping-bag"  aria-hidden="true"></i>   Dodaj wydatek</button>
+						</div>	
+						
+						<div class="col-12">		
+							<button type="button" class="btn btn-light menuButton"  onClick="window.location.href='balance.php'"><i class="fa fa-line-chart"  aria-hidden="true"></i>   Przeglądaj bilans</button>
+						</div>
+						
+						<div class="col-12">		
+							<button type="button" class="btn btn-light menuButton" onClick="window.location.href='#'"><i class="fa fa-cog"  aria-hidden="true"></i>   Ustawienia</button>
+						</div>
+								
+						<a href="/logout"><button type="button" class="btn btn-light menuButton" ><i class="fa fa-sign-out"  aria-hidden="true"></i>   Wyjście</button></a>
+						
+					</div>		
+								
+				</div>
+				
+			</div>
+			
+		</article>
+										
+	</main>
+{% endblock %}

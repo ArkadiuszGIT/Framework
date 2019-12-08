@@ -52,8 +52,8 @@ class Flash
             'type' => $type
         ];
     }
-
-    /**
+	
+	    /**
      * Get all the messages
      *
      * @return mixed  An array with all the messages or null if none set
@@ -68,4 +68,31 @@ class Flash
             return $messages;
         }
     }
+	
+	 public static function addMessageRegistration($message, $type = 'success')
+    {
+        // Create array in the session if it doesn't already exist
+        if (! isset($_SESSION['flash_notifications_registration'])) {
+            $_SESSION['flash_notifications_registration'] = [];
+        }
+
+        // Append the message to the array
+        //$_SESSION['flash_notifications_registration'][] = $message;
+        $_SESSION['flash_notifications_registration'][] = [
+            'body' => $message,
+            'type' => $type
+        ];
+    }
+	
+	public static function getMessagesRegistration()
+	{
+        if (isset($_SESSION['flash_notifications_registration'])) {
+            //return $_SESSION['flash_notifications_registration'];
+            $messages = $_SESSION['flash_notifications_registration'];
+            unset($_SESSION['flash_notifications_registration']);
+
+            return $messages;
+        }
+    }
+
 }

@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use \Core\View;
+use \App\Auth;
 
 /**
  * Items controller (example)
@@ -10,7 +11,7 @@ use \Core\View;
  * PHP version 7.0
  */
 //class Items extends \Core\Controller
-class Items extends Authenticated
+class Menu extends Authenticated
 {
 
     /**
@@ -18,12 +19,13 @@ class Items extends Authenticated
      *
      * @return void
      */
-    /*
+
     protected function before()
     {
+		parent::before();
         $this->requireLogin();
+		$this->user = Auth::getUser();
     }
-    */
 
     /**
      * Items index
@@ -32,7 +34,9 @@ class Items extends Authenticated
      */
     public function indexAction()
     {
-        View::renderTemplate('Items/index.html');
+        View::renderTemplate('Menu/index.html', [
+            'user' => $this->user
+        ]);
     }
 
     /**

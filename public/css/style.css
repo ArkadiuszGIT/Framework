@@ -1,0 +1,476 @@
+body
+{
+	/* Background pattern from subtlepatterns.com */
+	background-image: url("/img/green_cup.png");
+	font-size: 20px;
+	font-family: 'Lato', sans-serif;
+	margin: 0 !important;
+}
+
+h1
+{
+	margin-bottom: 30px;
+	text-align: center;
+	font-size: 30px;
+	font-weight: 400;
+}
+
+h2
+{
+	font-size: 20px;
+}
+
+.registration,
+.addIncome,
+.addExpense,
+.balance
+{
+	margin-top: 30px;
+}
+
+.main-page
+{
+	margin-top: 10px;
+}
+
+.uzytkownik
+{
+	margin-top: 10px;
+	margin-left: auto;
+	padding-right: 30px;
+	text-align: center;
+	color:white;
+	font-size:15px;
+}
+.komunikat
+{
+	margin-top: 10px;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	color:green;
+}
+.error
+{
+	color:red;
+	font-size:15px;
+}
+
+#errorBalance
+{
+	font-size: 20px;
+	color: darkred;
+}
+
+.inputWithIcon input[type=text],
+.inputWithIcon input[type=password]
+{
+	padding-left: 40px;
+}
+
+.inputWithIcon
+{
+	position: relative;
+}
+
+.inputWithIcon i
+{
+	position: absolute;
+	left: 0;
+	top:7px;
+	margin-left:2px;
+	padding: 9px 8px;
+	color: #aaa;
+	font-size: 15px;
+	width:30px;
+}
+
+.inputWithIcon.inputIconBg i
+{
+	background-color: #aaa;
+	color:#fff;
+	border-radius:4px 0 0 4px;
+}
+
+.inputWithIcon.inputIconBg input[type=text]:focus + i,
+.inputWithIcon.inputIconBg input[type=password]:focus + i
+{
+	color: #fff;
+	background-color: #428C42;
+}
+
+.registrationInputWithIcon input[type=text],
+.registrationInputWithIcon input[type=password],
+.registrationInputWithIcon input[type=email],
+.registrationInputWithIcon.inputIconBg input[type=number],
+.registrationInputWithIcon.inputIconBg input[type=date]
+{
+	padding-left: 40px;
+}
+
+.registrationInputWithIcon
+{
+	position: relative;
+}
+
+.registrationInputWithIcon i
+{
+	position: absolute;
+	left: 0;
+	top:2px;
+	margin-left:2px;
+	color: #aaa;
+	font-size: 17px;
+	width:35px;
+}
+
+.registrationInputWithIcon.inputIconBg i
+{
+	background-color: #aaa;
+	color:#fff;
+	padding: 9px 8px;
+	border-radius:4px 0 0 4px;
+}
+
+.registrationInputWithIcon.inputIconBg input[type=text]:focus + i,
+.registrationInputWithIcon.inputIconBg input[type=password]:focus + i,
+.registrationInputWithIcon.inputIconBg input[type=email]:focus + i,
+.registrationInputWithIcon.inputIconBg input[type=number]:focus + i,
+.registrationInputWithIcon.inputIconBg input[type=date]:focus + i
+{
+	color: #fff;
+	background-color: #428C42;
+}
+
+.inputFinance
+{
+	height:39px;
+	background-color: #efefef;
+	color: #666;
+	border: 2px solid black;
+	border-radius: 5px;
+}
+
+.inputRejestracja
+{
+	height:39px;
+	width: 250px;
+	background-color: #efefef;
+	color: #666;
+	border: 2px solid black;
+	border-radius: 5px;
+	font-size: 17px !important;
+	padding: 10px;
+	box-sizing: border-box;
+	outline: none;
+	margin-top: 10px !important;
+}
+
+input[type=text],
+input[type=email],
+input[type=password]
+{
+	width: 250px;
+	background-color: #efefef;
+	color: #666;
+	border: 2px solid black;
+	border-radius: 5px;
+	font-size: 15px;
+	padding: 10px;
+	box-sizing: border-box;
+	outline: none;
+	margin-top: 5px;
+}
+
+input[type=text]:focus,
+input[type=email]:focus,
+input[type=password]:focus,
+input[type=number]:focus,
+input[type=date]:focus
+{
+	-webkit-box-shadow: 0px 0px 10px 2px rgba(204,204,204,0.9);
+	-moz-box-shadow: 0px 0px 10px 2px rgba(204,204,204,0.9);
+	box-shadow: 0px 0px 10px 2px rgba(204,204,204,0.9);
+	border: 2px solid #a5cda5;
+	background-color: #e9f3e9;
+	color: black;
+}
+
+#komentarz:focus,
+#kategoria:focus,
+#sposobPlatnosci:focus
+{
+	-webkit-box-shadow: 0px 0px 10px 2px rgba(204,204,204,0.9);
+	-moz-box-shadow: 0px 0px 10px 2px rgba(204,204,204,0.9);
+	box-shadow: 0px 0px 10px 2px rgba(204,204,204,0.9);
+	border: 2px solid #428C42;
+	background-color: #e9f3e9;
+	color: black;
+}
+.navbar-btn {
+	
+	margin-top: 5px;
+	height:36px;
+    border-color: black;
+    background-color: white;
+}
+
+.navbar-btn:hover {
+	-webkit-box-shadow: 0px 0px 10px 2px rgba(204,204,204,0.9);
+	-moz-box-shadow: 0px 0px 10px 2px rgba(204,204,204,0.9);
+	box-shadow: 0px 0px 10px 2px rgba(204,204,204,0.9);
+	border: 2px solid #a5cda5;
+	background-color: #428C42;
+	color: white;
+}
+
+.navbar-btn.wyloguj:hover {
+	-webkit-box-shadow: 0px 0px 10px 2px rgba(204,204,204,0.9);
+	-moz-box-shadow: 0px 0px 10px 2px rgba(204,204,204,0.9);
+	box-shadow: 0px 0px 10px 2px rgba(204,204,204,0.9);
+	border: 2px solid #a5cda5;
+	background-color: darkred;
+	color: white;
+}
+.menu
+ {
+    margin: auto;
+	padding: 15px;
+	padding-bottom:40px;
+	border-radius: 5px;
+	border: 2px solid #0D533E;
+	background-image: url("img/green_gobbler.png");
+}
+
+.menuButton
+{
+	min-width: 250px;
+	background-color: #0D533E;
+	font-size:20px;
+	color: white;
+	padding: 15px 10px;
+	margin-top: 20px;
+	border: 2px solid black;
+	border-radius: 5px;
+	cursor: pointer;
+	letter-spacing: 2px;
+	outline: none;
+}
+
+.g-recaptcha{
+transform:scale(0.80) !important;
+-webkit-transform:scale(0.80) !important;
+transform-origin:0 0 !important;
+-webkit-transform-origin:0 0 !important;
+}
+.btn-block
+{
+	background-color: #0D533E;
+	color: white;
+	padding: 15px 10px;
+	margin-top: 20px;
+	border: 2px solid black;
+	border-radius: 5px;
+	cursor: pointer;
+	letter-spacing: 2px;
+	outline: none;
+}
+
+.btn-block:focus,
+.menuButton:focus
+{
+	-webkit-box-shadow: 0px 0px 15px 5px rgba(204,204,204,0.9);
+	-moz-box-shadow: 0px 0px 15px 5px rgba(204,204,204,0.9);
+	box-shadow: 0px 0px 15px 5px rgba(204,204,204,0.9);
+}
+
+.btn-block:hover,
+.menuButton:hover
+{
+	-webkit-box-shadow: 0px 0px 10px 2px rgba(204,204,204,0.9);
+	-moz-box-shadow: 0px 0px 10px 2px rgba(204,204,204,0.9);
+	box-shadow: 0px 0px 10px 2px rgba(204,204,204,0.9);
+	border: 2px solid #a5cda5;
+	background-color: #428C42;
+	color: white;
+	background-color: #428C42;
+}
+
+input::-webkit-input-placeholder
+{
+    color: #999;
+}
+input:focus::-webkit-input-placeholder
+{
+    color: #428C42;
+}
+/* Firefox < 19 */
+input:-moz-placeholder
+{
+    color: #999;
+}
+input:focus:-moz-placeholder
+{
+    color: #428C42;
+}
+/* Firefox > 19 */
+input::-moz-placeholder
+{
+    color: #999;
+}
+input:focus::-moz-placeholder
+{
+    color: #428C42;
+}
+/* Internet Explorer 10 */
+input:-ms-input-placeholder
+{
+    color: #999;
+}
+input:focus:-ms-input-placeholder
+{
+    color: #428C42;
+}
+
+.choice
+{
+	font-size:15px;
+	width:50px;
+	float: right;
+	margin-right:250px;
+}
+.nav-link.dropdown-toggle
+{
+	color: #0D533E !important;
+}
+.navbar
+{
+	min-height: 57px;
+}
+
+.bg-homebudget
+{
+	background-color: #0D533E !important;
+}
+
+.navbar-nav li
+{
+	border-right: 1px dashed white;
+	font-size: 15px;
+}
+
+.navbar-nav li:hover
+{
+	background-color:  #428C42;
+}
+
+.navbar-nav li:hover>.dropdown-menu
+{
+	display: block;
+	background-color: #0D533E;
+	font-size: 15px;
+}
+
+.dropdown-menu
+{
+	background-color: #0D533E;
+}
+
+.dropdown-item
+{
+	background-color: #0D533E;
+	font-size: 15px;
+	color: white;
+}
+.dropdown-item:hover
+{
+	background-color:  #428C42;
+	color: #fff;
+}
+
+.dropdown-item.active
+{
+   color: #fff;
+   background-color: #428C42;
+   border-color: #fff;
+}
+
+.main-form
+ {
+    margin: auto;
+	padding: 15px;
+	border-radius: 5px;
+	border: 2px solid #0D533E;
+	background-image: url("/img/green_gobbler.png");
+}
+
+.colb
+{
+	margin: auto;
+	padding: 15px;
+	border-radius: 5px;
+	border: 2px solid #0D533E;
+}
+
+.table-condensed{
+  font-size: 15px;
+}
+.wydatki
+{
+	background-image: url("/img/green_dust_scratch.png");
+}
+
+.przychody
+{
+	background-image: url("/img/green_gobbler.png");
+}
+
+.bilans
+{
+	background-image: url("/img/leaves.png");
+}
+
+.checkbox
+{
+	margin-left: 40px;
+	margin-top: 5px;
+	white-space: nowrap;
+	font-size: 15px; 
+	color:white;
+}
+
+.forgotpassword
+{
+	margin-top: 5px;
+	white-space: nowrap;
+	font-size: 15px; 
+	color:white;
+}
+
+a { color: white }
+
+a:hover { color: #428C42; }
+
+
+.alert {
+	text-align: center;
+    border: 1px solid #ccc;
+    padding: 6px;
+}
+/*
+.alert-success {
+    background-color: #dff0d8;
+}
+/*
+.alert-info {
+    background-color: #d9edf7;
+}
+.alert-warning {
+    background-color: #fcf8e3;
+}
+*/
+
+
+.
+
+

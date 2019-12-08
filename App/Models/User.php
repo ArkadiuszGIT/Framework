@@ -53,7 +53,7 @@ class User extends \Core\Model
             $hashed_token = $token->getHash();
             $this->activation_token = $token->getValue();
 
-            $sql = 'INSERT INTO users (name, email, password_hash, activation_hash)
+            $sql = 'INSERT INTO users (login, email, password_hash, activation_hash)
                     VALUES (:name, :email, :password_hash, :activation_hash)';
 
             $db = static::getDB();
@@ -79,33 +79,51 @@ class User extends \Core\Model
     {
         // Name
         if ($this->name == '') {
-            $this->errors[] = 'Name is required';
+            $this->errors[] = 'Podaj nazwę użytkownika!';
+        }
+		if (static::loginExists($this->name, $this->id ?? null)) {
+            $this->errors[] = 'Użytkownik o tej nazwie jest już zarejestrowany!';
         }
 
         // email address
         if (filter_var($this->email, FILTER_VALIDATE_EMAIL) === false) {
-            $this->errors[] = 'Invalid email';
+            $this->errors[] = 'Podaj poprawny adres e-mail!';
         }
         if (static::emailExists($this->email, $this->id ?? null)) {
-            $this->errors[] = 'email already taken';
+            $this->errors[] = 'Email o tej nazwie jest już zarejestrowany!';
         }
 
         // Password
         if (isset($this->password)) {
 
             if (strlen($this->password) < 6) {
-                $this->errors[] = 'Please enter at least 6 characters for the password';
+                $this->errors[] = 'Hasło musi posiadać od 6 do 20 znaków!';
+            }
+			
+			 if (strlen($this->password) > 20) {
+                $this->errors[] = 'Hasło musi posiadać od 6 do 20 znaków!';
             }
 
             if (preg_match('/.*[a-z]+.*/i', $this->password) == 0) {
-                $this->errors[] = 'Password needs at least one letter';
+                $this->errors[] = 'Hasło musi zawierać conajmniej jedną literę';
             }
 
             if (preg_match('/.*\d+.*/i', $this->password) == 0) {
-                $this->errors[] = 'Password needs at least one number';
+                $this->errors[] = 'Hasło musi zawierać conajmniej jedną cyfrę';
             }
 
         }
+		
+		$secret = "6LcXWr0UAAAAANebakfCBeWCgj-R25FwIg2E_Kuj";
+	
+		$check = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$secret.'&response='.$_POST['g-recaptcha-response']);
+	
+		$check = json_decode($check);
+		
+		if ($check->success==false)
+		{
+			$this->errors[] = 'Potwierdź, że nie jesteś botem!';
+		}		
     }
 
     /**
@@ -116,12 +134,39 @@ class User extends \Core\Model
      *
      * @return boolean  True if a record already exists with the specified email, false otherwise
      */
+	public static function loginExists($login, $ignore_id = null)
+    {
+        $user = static::findByLogin($login);
+
+        if ($user) {
+            if ($user->userID != $ignore_id) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+	public static function findByLogin($login)
+    {
+        $sql = 'SELECT * FROM users WHERE login = :login';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':login', $login, PDO::PARAM_STR);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+
+        $stmt->execute();
+
+        return $stmt->fetch();
+    }
+
     public static function emailExists($email, $ignore_id = null)
     {
         $user = static::findByEmail($email);
 
         if ($user) {
-            if ($user->id != $ignore_id) {
+            if ($user->userID != $ignore_id) {
                 return true;
             }
         }
@@ -160,9 +205,9 @@ class User extends \Core\Model
      *
      * @return mixed  The user object or false if authentication fails
      */
-    public static function authenticate($email, $password)
+    public static function authenticate($login, $password)
     {
-        $user = static::findByEmail($email);
+        $user = static::findByLogin($login);
 
         //if ($user) {
         if ($user && $user->is_active) {
@@ -183,7 +228,7 @@ class User extends \Core\Model
      */
     public static function findByID($id)
     {
-        $sql = 'SELECT * FROM users WHERE id = :id';
+        $sql = 'SELECT * FROM users WHERE userID = :id';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
@@ -260,7 +305,7 @@ class User extends \Core\Model
         $sql = 'UPDATE users
                 SET password_reset_hash = :token_hash,
                     password_reset_expires_at = :expires_at
-                WHERE id = :id';
+                WHERE userID = :id';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
@@ -366,10 +411,10 @@ class User extends \Core\Model
      */
     public function sendActivationEmail()
     {
-        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/signup/activate/' . $this->activation_token;
+        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/home/activate/' . $this->activation_token;
 
-        $text = View::getTemplate('Signup/activation_email.txt', ['url' => $url]);
-        $html = View::getTemplate('Signup/activation_email.html', ['url' => $url]);
+        $text = View::getTemplate('Home/activation_email.txt', ['url' => $url]);
+        $html = View::getTemplate('Home/activation_email.html', ['url' => $url]);
 
         Mail::send($this->email, 'Account activation', $text, $html);
     }
@@ -421,7 +466,7 @@ class User extends \Core\Model
         if (empty($this->errors)) {
 
             $sql = 'UPDATE users
-                    SET name = :name,
+                    SET login = :name,
                         email = :email';
 
             // Add password if it's set
@@ -429,7 +474,7 @@ class User extends \Core\Model
                 $sql .= ', password_hash = :password_hash';
             }
 
-            $sql .= "\nWHERE id = :id";
+            $sql .= "\nWHERE userID = :id";
 
 
             $db = static::getDB();

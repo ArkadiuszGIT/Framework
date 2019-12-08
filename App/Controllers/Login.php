@@ -16,23 +16,13 @@ class Login extends \Core\Controller
 {
 
     /**
-     * Show the login page
-     *
-     * @return void
-     */
-    public function newAction()
-    {
-        View::renderTemplate('Login/new.html');
-    }
-
-    /**
      * Log in a user
      *
      * @return void
      */
     public function createAction()
     {
-        $user = User::authenticate($_POST['email'], $_POST['password']);
+        $user = User::authenticate($_POST['log'], $_POST['logPassword']);
         
         $remember_me = isset($_POST['remember_me']);
 
@@ -40,16 +30,14 @@ class Login extends \Core\Controller
 
             Auth::login($user, $remember_me);
 
-            Flash::addMessage('Login successful');
-
-            $this->redirect(Auth::getReturnToPage());
+           $this->redirect('/menu/index');
 
         } else {
 
-            Flash::addMessage('Login unsuccessful, please try again', Flash::WARNING);
+            Flash::addMessage('Nieprawidłowy login lub hasło', Flash::WARNING);
 
-            View::renderTemplate('Login/new.html', [
-                'email' => $_POST['email'],
+            View::renderTemplate('Home/index.html', [
+                'log' => $_POST['log'],
                 'remember_me' => $remember_me
             ]);
         }

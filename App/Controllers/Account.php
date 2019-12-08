@@ -19,6 +19,14 @@ class Account extends \Core\Controller
      *
      * @return void
      */
+	 public function validateLoginAction()
+    {
+        $is_valid = ! User::loginExists($_GET['name'], $_GET['ignore_id'] ?? null);
+        
+        header('Content-Type: application/json');
+        echo json_encode($is_valid);
+    }
+	
     public function validateEmailAction()
     {
         $is_valid = ! User::emailExists($_GET['email'], $_GET['ignore_id'] ?? null);
@@ -26,4 +34,5 @@ class Account extends \Core\Controller
         header('Content-Type: application/json');
         echo json_encode($is_valid);
     }
+
 }
