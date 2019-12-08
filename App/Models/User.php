@@ -205,9 +205,9 @@ class User extends \Core\Model
      *
      * @return mixed  The user object or false if authentication fails
      */
-    public static function authenticate($email, $password)
+    public static function authenticate($login, $password)
     {
-        $user = static::findByEmail($email);
+        $user = static::findByLogin($login);
 
         //if ($user) {
         if ($user && $user->is_active) {
@@ -411,10 +411,10 @@ class User extends \Core\Model
      */
     public function sendActivationEmail()
     {
-        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/signup/activate/' . $this->activation_token;
+        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/home/activate/' . $this->activation_token;
 
-        $text = View::getTemplate('Signup/activation_email.txt', ['url' => $url]);
-        $html = View::getTemplate('Signup/activation_email.html', ['url' => $url]);
+        $text = View::getTemplate('Home/activation_email.txt', ['url' => $url]);
+        $html = View::getTemplate('Home/activation_email.html', ['url' => $url]);
 
         Mail::send($this->email, 'Account activation', $text, $html);
     }

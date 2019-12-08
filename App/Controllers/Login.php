@@ -30,7 +30,7 @@ class Login extends \Core\Controller
 
             Auth::login($user, $remember_me);
 
-            $this->redirect(Auth::getReturnToPage());
+           $this->redirect('/menu/index');
 
         } else {
 

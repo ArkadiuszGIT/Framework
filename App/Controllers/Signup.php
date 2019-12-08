@@ -26,7 +26,7 @@ class Signup extends \Core\Controller
 
             $user->sendActivationEmail();
 			
-			Flash::addMessage('Success! Thank you for signing up. Please check your email to activate your account.');
+			Flash::addMessageRegistration('Success! Thank you for signing up. Please check your email to activate your account.');
 			
 			$this->redirect('/Home/index');
 

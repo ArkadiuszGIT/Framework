@@ -69,17 +69,20 @@
 							required: 'Podaj hasło!',
 							minlength: 'Hasło powinno zawierać od 6 do 20 znaków!',
 							maxlength: 'Hasło powinno zawierać od 6 do 20 znaków!'
+						},
+						hiddenRecaptcha: {
+							required: 'Potwierdź, że nie jesteś botem!',
 						}
 					}
 				});
 
-
-				/**
-				  * Show password toggle button
-				  */
 				$('#password').hideShowPassword({
 					show: false,
 					innerToggle: 'focus',
+					toggle: {
+						verticalAlign: 'top',
+						styles: { 'margin-top': '1.5px' , 'margin-right': '1px'}    // add top margin to button
+					}
 				});
 			});		
 	</script>
@@ -145,8 +148,8 @@
 	
 	<main>
 	
-		{% for message in flash_messages %}
-			<div class="komunikat">
+		{% for message in flash_messages_registration %}
+			<div class="alert alert-success">
 				{{ message.body }}
 			</div>
 		{% endfor %}
