@@ -22,31 +22,23 @@ class Signup extends \Core\Controller
     {
         $user = new User($_POST);
 
-        if ($user->save()) {
-
+        if ($user->save() && $user->copyDefaultUserCategories()) {
+		
             $user->sendActivationEmail();
 			
-			Flash::addMessageRegistration('Success! Thank you for signing up. Please check your email to activate your account.');
+			Flash::addMessageRegistration('Sukces! Dziękujemy za rejestracje. Sprawdź swój email aby aktywować konto.');
 			
 			$this->redirect('/Home/index');
 
         } else {
+			
+			Flash::addMessageRegistration('Niestety nie udało Ci się zarejestrować, spróbuj jeszcze raz.', Flash::WARNING);
 
             View::renderTemplate('Home/index.html', [
                 'user' => $user
             ]);
 
         }
-    }
-
-    /**
-     * Show the signup success page
-     *
-     * @return void
-     */
-    public function successAction()
-    {
-        View::renderTemplate('Signup/success.html');
     }
 
     /**
@@ -58,7 +50,7 @@ class Signup extends \Core\Controller
     {
         User::activate($this->route_params['token']);
 
-        $this->redirect('/signup/activated');
+        $this->redirect('/home/activated');
     }
 
     /**
@@ -68,6 +60,6 @@ class Signup extends \Core\Controller
      */
     public function activatedAction()
     {
-        View::renderTemplate('Signup/activated.html');
+        View::renderTemplate('Home/activated.html');
     }
 }

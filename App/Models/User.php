@@ -69,6 +69,32 @@ class User extends \Core\Model
 
         return false;
     }
+	 
+	public function copyDefaultUserCategories()
+    {	
+		if (empty($this->errors)) {
+	
+			$user = static::findByLogin($this->name);
+			
+			$sql = '
+			INSERT INTO incomes_category_assigned_to_users (name, userID)
+					SELECT incomes_category_default.name, :id FROM incomes_category_default;
+			INSERT INTO expenses_category_assigned_to_users (name, userID)
+					SELECT expenses_category_default.name, :id FROM expenses_category_default;
+			INSERT INTO payment_methods_assigned_to_users (name, userID)
+					SELECT payment_methods_default.name, :id FROM payment_methods_default;		
+			';
+            $db = static::getDB();
+            $stmt = $db->prepare($sql);
+
+            $stmt->bindValue(':id', $user->userID, PDO::PARAM_INT);
+
+            return $stmt->execute();
+		}
+		
+		return false;
+     }
+	
 
     /**
      * Validate current property values, adding valiation error messages to the errors array property

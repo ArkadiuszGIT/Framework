@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use \Core\View;
 use \App\Auth;
-use \App\Models\Income;
+use \App\Models\Expense;
 use \App\Flash;
 
 /**
@@ -13,7 +13,7 @@ use \App\Flash;
  * PHP version 7.0
  */
 //class Items extends \Core\Controller
-class Addincome extends Authenticated
+class Addexpense extends Authenticated
 {
 
     /**
@@ -27,25 +27,27 @@ class Addincome extends Authenticated
 		parent::before();
         $this->requireLogin();
 		$this->user = Auth::getUser();
-		$this->category = Income::getUsersIncomeCategory();
+		$this->category = Expense::getUsersExpenseCategory();
+		$this->payment = Expense::getUsersExpensePaymentMethod();
     }
 	
 	public function createAction()
     {
-        $income = new Income($_POST);
+        $expense = new Expense($_POST);
 
-        if ($income->save()) {
+        if ($expense->save()) {
 			
-			Flash::addMessage('Sukces! Przychód został poprawnie dodany!');
+			Flash::addMessage('Sukces! Wydatek został poprawnie dodany!');
 			
-			$this->redirect('/Addincome/income');
+			$this->redirect('/Addexpense/expense');
 
         } else {
 
-            View::renderTemplate('income/income.html', [
-				'income' => $income,
+            View::renderTemplate('expense/expense.html', [
+				'expense' => $expense,
                 'user' => $this->user,
-				'category' => $this->category
+				'category' => $this->category,
+				'payment' => $this->payment
             ]);
 
         }
@@ -56,11 +58,12 @@ class Addincome extends Authenticated
      *
      * @return void
      */
-    public function incomeAction()
+    public function expenseAction()
     {
-        View::renderTemplate('income/income.html', [
+        View::renderTemplate('expense/expense.html', [
             'user' => $this->user,
-			'category' => $this->category
+			'category' => $this->category,
+			'payment' => $this->payment
         ]);
     }
 
