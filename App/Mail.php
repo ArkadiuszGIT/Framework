@@ -45,7 +45,7 @@ class Mail
 			$mail->Host       = 'smtp.gmail.com';                    // Set the SMTP server to send through
 			$mail->SMTPAuth   = true;                                   // Enable SMTP authentication
 			$mail->Username   = 'arkadiusz.kawalec.programista@gmail.com';                     // SMTP username
-			$mail->Password   = 'Hasło do konta lub hasło dla aplikacji  wygenerowane przy pomocy 2 etapowej wyryfikacji google(jeżeli nie działa pierwsze)';                               // SMTP password
+			$mail->Password   = 'yfticexrsjxajlml';                               // SMTP password
 			$mail->SMTPSecure = 'ssl';        // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` also accepted
 			$mail->Port       = 465;                                    // TCP port to connect to
 
@@ -74,7 +74,7 @@ class Mail
 			$mail->AltBody = $text;
 
 			$mail->send();
-			echo 'Message has been sent';
+
 		} catch (Exception $e) {
 			echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
 		}
