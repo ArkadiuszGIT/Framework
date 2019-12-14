@@ -35,7 +35,7 @@ class Password extends \Core\Controller
 		
 		Flash::addMessage('Sprawdź email');
 		
-		$this->redirect('/Password/forgot');
+		View::renderTemplate('Password/forgot.html');
     }
 
     /**

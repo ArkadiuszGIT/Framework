@@ -46,18 +46,5 @@ class Config
 		*/
 	
 	const SECRET_KEY = 'mTAG49mzoNVSjHXYGQepG5188a3eJxLh';
-		
-	    /**
-     * Mailgun API key
-     *
-     * @var string
-     */
-    const MAILGUN_API_KEY = '';
-
-    /**
-     * Mailgun domain
-     *
-     * @var string
-     */
-    const MAILGUN_DOMAIN = '';
+	
 }
