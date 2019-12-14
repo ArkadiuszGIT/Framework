@@ -7,10 +7,12 @@
     <script src="/js/application.js"></script>
 	
 	<script>
-			function recaptchaCallback() {
-				$('#hiddenRecaptcha').valid();
-			};
+
 			$(document).ready(function() {
+			
+					function recaptchaCallback() {
+						$('#hiddenRecaptcha').valid();
+					};
 					jQuery.validator.addMethod("validUserName", function(value, element) {
        
 							if (value != '') {
@@ -136,7 +138,7 @@
 					</div>							
 					
 					
-					<button type="submit" class="btn btn-light navbar-btn" onclick=""><i class="fa fa-sign-in"  aria-hidden="true"></i>   Zaloguj się</button>
+					<button type="submit" class="btn btn-light navbar-btn" ><i class="fa fa-sign-in"  aria-hidden="true"></i>   Zaloguj się</button>
 				
 				</form>
 			
@@ -193,7 +195,7 @@
 									<div class="col-6">
 										<div class="form-group">
 											<div class="registrationInputWithIcon inputIconBg">
-												<input type="text" class="form-control inputRejestracja" autofocus value="{{ user.name }}" name="name" placeholder="login" required/>
+												<input type="text" class="form-control inputRejestracja" value="{{ user.name }}" name="name" placeholder="login" required/>
 												<i class="fa fa-user"  aria-hidden="true"></i>
 											</div>
 										</div>

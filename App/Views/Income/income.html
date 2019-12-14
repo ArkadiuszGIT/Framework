@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% block title %}Income{% endblock %}
+
+{% block footer %}
+    <script src="/js/hideShowPassword.min.js"></script>
+    <script src="/js/application.js"></script>
+	
+	<script>
+			
+			data();
+			$(document).ready(function() {
+				/**
+				 * Validate the form
+				 */
+				$('#income').validate({
+					rules: {
+					    income: {
+							required: true,
+							number: true,
+							min: 0
+						}
+					},
+					messages: {
+					    income: {
+							required: 'Dodaj przychód!',
+							number: 'Wpisz liczbę!',
+							min: 'Przychód musi być większy od 0!'
+						}
+					}
+				});
+			});		
+	</script>
+{% endblock %}	
+{% block body %}
+	<header>
+	
+		<nav class="navbar navbar-dark bg-homebudget navbar-expand-lg">
+		
+			<a class="navbar-brand" href="/Addincome/income"><img src="/img/home.png" alt=""></a>
+			
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainmenu" aria-controls="mainmenu" aria-expanded="false" aria-label="Przełącznik nawigacji">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+		
+			<div class="collapse navbar-collapse" id="mainmenu">
+			
+				<ul class="navbar-nav mr-auto">
+				
+					<li class="nav-item">
+							<a class="nav-link" href="/menu/index"><i class="fa fa-home"  aria-hidden="true"></i>  Strona główna </a>
+					</li>
+					
+					<li class="nav-item active">
+						<a class="nav-link" href="/addincome/income"><i class="fa fa-dollar"  aria-hidden="true"></i>  Dodaj przychód </a>
+					</li>
+					
+					<li class="nav-item">
+						<a class="nav-link" href="/addexpense/expense"><i class="fa fa-shopping-bag"  aria-hidden="true"></i>  Dodaj wydatek </a>
+					</li>
+					
+					<li class="nav-item">
+						<a class="nav-link" href="balance.php"><i class="fa fa-line-chart"  aria-hidden="true"></i>   Przeglądaj bilans</a>
+					</li>
+									
+					<li class="nav-item">
+						<a class="nav-link" href="#"><i class="fa fa-cog"  aria-hidden="true"></i>  Ustawienia </a>
+					</li>				
+					
+				</ul>	
+					
+				<div class="uzytkownik">
+						Zalogowany jako: {{ user.login }}
+				</div>
+				<a href="/logout"><button type="button" class="btn btn-light navbar-btn wyloguj"><i class="fa fa-sign-out"  aria-hidden="true"></i>   Wyloguj się</button></a>
+			
+			</div>
+		
+		</nav>
+		
+	</header>
+	
+	<main>
+		
+		{% for message in flash_messages %}
+			<div class="alert alert-success">
+				{{ message.body }}
+			</div>
+		{% endfor %}
+							
+		{% if income.errors is not empty %}
+			<p>Errors:</p>
+			<ul>
+				{% for error in income.errors %}
+					<li>{{ error }}</li>
+				{% endfor %}
+			</ul>
+		{% endif %}
+		<section>
+		
+			<div class="container">
+				
+					<div class="row">
+		
+						<div class="col-lg-6 addIncome">
+			
+							<form action="/addincome/create" class="main-form"  id="income" method="post">
+								<header>
+										
+									<h1>Dodaj przychód</h1>
+									
+								</header>
+								<div class="row">
+									<div class="col">
+										<div class="form-group">
+											<label for="income">Kwota</label>
+											<div class="registrationInputWithIcon inputIconBg">
+												<input type="number" id="income" name="income" step="0.01" class="form-control inputFinance" value="">
+												<i class="fa fa-dollar"  aria-hidden="true"></i>
+											</div>
+										</div>
+									</div>
+									<div class="col">
+										<div class="form-group">
+											<label for="date">Data przychodu</label>
+											<div class="registrationInputWithIcon inputIconBg">
+												<input type="date" id="date" value="1111-11-11" name="incomeDate" class="form-control inputFinance" value="" >
+												<i class="fa fa-calendar"  aria-hidden="true"></i>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="kategoria">Kategoria</label>
+									<select name="kategoria" id="kategoria" class="form-control inputFinance">
+										{% if category is not empty %}
+												{% for item in category %}
+													<option value="{{item.name}}">{{item.name}}</option>
+												{% endfor %}
+										{% endif %}
+									</select>
+								</div>
+								<div class="form-group">
+									<label for="komentarz">Uwagi:</label>
+									<textarea maxlength="100" name="komentarz" id="komentarz" class="form-control inputFinance"></textarea>
+								</div>
+								<button type="submit" class="btn btn-success"><i class="fa fa-plus"  aria-hidden="true"></i>   Dodaj</button>
+								<button type="button" class="btn btn-danger" onClick="location.href='/addincome/income'"><i class="fa fa-times"  aria-hidden="true"></i>   Anuluj</button>
+							</form>
+						</div>		
+								
+					</div>
+				
+			</div>
+	
+		</section>
+										
+	</main>
+{% endblock %}

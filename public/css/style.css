@@ -25,6 +25,7 @@ h2
 .addExpense,
 .balance
 {
+	margin: auto;
 	margin-top: 30px;
 }
 
@@ -396,7 +397,7 @@ input:focus:-ms-input-placeholder
 }
 
 .main-form
- {
+{
     margin: auto;
 	padding: 15px;
 	border-radius: 5px;
