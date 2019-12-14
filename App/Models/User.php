@@ -462,7 +462,7 @@ class User extends \Core\Model
      */
     public function sendActivationEmail()
     {
-        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/home/activate/' . $this->activation_token;
+        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/signup/activate/' . $this->activation_token;
 
         $text = View::getTemplate('Home/activation_email.txt', ['url' => $url]);
         $html = View::getTemplate('Home/activation_email.html', ['url' => $url]);
