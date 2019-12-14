@@ -51,10 +51,10 @@ class Expense extends \Core\Model
             $stmt->bindValue(':id', $_SESSION['user_id'], PDO::PARAM_INT);
             $stmt->bindValue(':categoryID', $expenseCategory->expenseCategoryAssignedToUserID, PDO::PARAM_INT);
 			$stmt->bindValue(':paymentID', $paymentMethod->paymentMethodAssignedToUserID, PDO::PARAM_INT);
-			$stmt->bindValue(':expense', $this->expense, PDO::PARAM_INT);
+			$stmt->bindValue(':expense', strval($this->expense), PDO::PARAM_STR);
             $stmt->bindValue(':date', $this->expenseDate, PDO::PARAM_STR);
 			$stmt->bindValue(':komentarz', $this->komentarz, PDO::PARAM_STR);
-
+			
             return $stmt->execute();
         }
 
