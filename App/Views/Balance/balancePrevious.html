@@ -1,0 +1,331 @@
+{% extends 'base.html' %}
+
+{% block title %}Balance Previous{% endblock %}
+
+{% block footer %}
+    <script src="/js/hideShowPassword.min.js"></script>
+    <script src="/js/application.js"></script>
+	<script  src="https://www.gstatic.com/charts/loader.js"></script>
+	
+	<script>
+		dataPreviousBilans();
+		obliczBilans();
+		
+			// Load google charts
+		google.charts.load('current', {'packages':['corechart']});
+		google.charts.setOnLoadCallback(drawChart);
+		
+		function resize () {
+			drawChart();
+		}
+		function drawChart() {	
+			var data = google.visualization.arrayToDataTable([
+				['Wydatki', 'Percentage'],
+				{% if expenseChart is not empty %}
+					{% for item in expenseChart %}
+					['{{ item.name }}', {{ -item.1 }}],
+					{% endfor %}
+				{% endif %}
+			]);
+
+			// Optional; add a title and set the width and height of the chart
+			var options = {'height':440, backgroundColor:'none'};
+
+			// Display the chart inside the <div> element with id="piechart"
+			var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+			chart.draw(data, options);
+			
+			if (window.addEventListener) {
+				window.addEventListener('resize', resize);
+			}
+			else {
+			window.attachEvent('onresize', resize);
+			}
+		}
+	</script>
+{% endblock %}	
+{% block body %}
+	<header>
+	
+		<nav class="navbar navbar-dark bg-homebudget navbar-expand-lg">
+		
+			<a class="navbar-brand" href="/showbalanceprevious/balance"><img src="/img/home.png" alt=""></a>
+			
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainmenu" aria-controls="mainmenu" aria-expanded="false" aria-label="Przełącznik nawigacji">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+		
+			<div class="collapse navbar-collapse" id="mainmenu">
+			
+				<ul class="navbar-nav mr-auto">
+				
+					<li class="nav-item">
+							<a class="nav-link" href="/menu/index"><i class="fa fa-home"  aria-hidden="true"></i>  Strona główna </a>
+					</li>
+					
+					<li class="nav-item">
+						<a class="nav-link" href="/addincome/income"><i class="fa fa-dollar"  aria-hidden="true"></i>  Dodaj przychód </a>
+					</li>
+					
+					<li class="nav-item">
+						<a class="nav-link" href="/addexpense/expense"><i class="fa fa-shopping-bag"  aria-hidden="true"></i>  Dodaj wydatek </a>
+					</li>
+					
+					<li class="nav-item active" >
+						<a class="nav-link" href="/showbalance/balance"><i class="fa fa-line-chart"  aria-hidden="true"></i>   Przeglądaj bilans</a>
+					</li>
+									
+					<li class="nav-item">
+						<a class="nav-link" href="#"><i class="fa fa-cog"  aria-hidden="true"></i>  Ustawienia </a>
+					</li>				
+					
+				</ul>	
+					
+				<div class="uzytkownik">
+						Zalogowany jako: {{ user.login }}
+				</div>
+				<a href="/logout"><button type="button" class="btn btn-light navbar-btn wyloguj"><i class="fa fa-sign-out"  aria-hidden="true"></i>   Wyloguj się</button></a>
+			
+			</div>
+		
+		</nav>
+		
+	</header>
+	
+	<main class="balance">
+	
+		<article>
+			<div class="choice">
+				<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-expanded="false" id="submenu" aria-haspopup="true"><i class="fa fa-calendar"  aria-hidden="true"></i>   Wybierz okres</a>
+				
+				<div class="dropdown-menu" aria-labelledby="submenu">
+				
+					<a class="dropdown-item active" href="/showbalance/balance"> Bieżący miesiąc </a>
+					<a class="dropdown-item" href="/showbalanceprevious/balance"> Poprzedni miesiąc </a>							
+					<a class="dropdown-item" href="/showbalancecurrentyear/balance"> Bieżący rok </a>
+					<button type="button" class="dropdown-item" data-toggle="modal" data-target="#exampleModal">
+						Niestandardowy okres
+					</button>
+										
+				</div>
+				
+				<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				  <div class="modal-dialog" role="document" >
+					<div class="modal-content">
+						<form class="needs-validation" action="/showbalancecustom/balance" method="POST" >
+						  <div class="modal-header">
+							<h5 class="modal-title" id="exampleModalLabel">Wybierz zakres dat:</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							  <span aria-hidden="true">&times;</span>
+							</button>
+						  </div>
+						  <div class="modal-body">
+							 <div class="row">
+								<div class="col-6">
+									od:
+									<div class="registrationInputWithIcon inputIconBg">
+										<input type="date" id="firstday" name="firstday" class="form-control inputFinance" required>
+										<i class="fa fa-calendar"  aria-hidden="true"></i>
+									</div>
+								</div>
+								<div class="col-6">
+									do:
+									<div class="registrationInputWithIcon inputIconBg">
+										<input type="date" id="lastday" name="lastday" class="form-control inputFinance" required>
+										<i class="fa fa-calendar"  aria-hidden="true"></i>
+									</div>
+								</div>
+							 </div>
+						  </div>
+						  <div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+							<button type="submit" class="btn btn-success"  >Zapisz</button>
+						  </div>
+						</form>
+					</div>
+				  </div>
+				</div>
+			</div>
+			
+			<div style="clear: both;"></div>
+					
+			<div class="container">
+			
+				<header>
+					
+					<h1 id="h1"></h1>
+			
+				</header>	
+			
+				<div class="row">
+	
+					<section class="col-11 my-2 colb przychody">
+					
+							<header><h2>Suma przychodów:</h2></header>
+							
+							<div class="table-responsive">
+							  <table class="table table-hover table-sm">
+								<thead>
+								  <tr>
+									<th scope="col">#</th>
+									<th scope="col">Kategoria</th>
+									<th scope="col">Kwota</th>
+								  </tr>
+								</thead>
+								<tbody>
+										{% if incomeCatSum is not empty %}
+												{% for item in incomeCatSum %}
+													<tr>
+														<td>{{ loop.index }}</td>
+														<td>{{ item.name }}</td>
+														<td>{{ item.1 }} zł</td>
+													</tr>
+												{% endfor %}
+											<tr>
+												<td></td>
+												<td><strong>Razem</strong></td>
+												<td><strong id="sumaPrzychodow">{% for item in incomeSum %}{{ item.0 }}{% endfor %} zł</strong></td>
+											</tr>
+										{% endif %}
+								</tbody>
+							  </table>
+							</div>	
+							
+					</section>
+					
+					<section class="col-11 my-2 colb przychody">
+					
+							<header><h2>Przychody szczegółowe:</h2></header>
+							
+							<div class="table-responsive">
+							  <table class="table table-hover table-sm table-condensed">
+								<thead>
+								  <tr>
+									<th scope="col">#</th>
+									<th scope="col">Data</th>
+									<th scope="col">Kwota</th>
+									<th scope="col">Kategoria</th>
+									<th scope="col">Komentarz</th>
+									<th class="text-right">Akcja</th>
+								  </tr>
+								</thead>
+								<tbody>						
+										{% if income is not empty %}
+												{% for item in income %}
+													<tr>
+														<td>{{ loop.index }}</td>
+														<td>{{ item.dateOfIncome }}</td>
+														<td>{{ item.amount }} zł</td>
+														<td>{{ item.name }}</td>
+														<td>{{ item.incomeComment }}</td>
+														<td class="text-right">
+															<button type="button" class="btn btn-primary" onClick=""><i class="fa fa-pencil"  aria-hidden="true"></i></button>
+															<button type="button" class="btn btn-danger" onClick=""><i class="fa fa-times"  aria-hidden="true"></i></button>
+														</td>
+													</tr>
+												{% endfor %}
+										{% endif %}
+								</tbody>
+							  </table>
+							</div>		
+		
+					</section>
+							
+					<section class="col-11 my-2 colb wydatki">
+					
+							<header><h2>Suma wydatków:</h2></header>
+							
+							<div class="table-responsive">
+							  <table class="table table-hover table-sm">
+								<thead>
+									<tr>
+										<th scope="col">#</th>
+										<th scope="col">Kategoria</th>
+										<th scope="col">Kwota</th>
+									</tr>
+								</thead>
+										{% if expenseCatSum is not empty %}
+												{% for item in expenseCatSum %}
+													<tr>
+														<td>{{ loop.index }}</td>
+														<td>{{ item.name }}</td>
+														<td>{{ item.1 }} zł</td>
+													</tr>
+												{% endfor %}
+											<tr>
+												<td></td>
+												<td><strong>Razem</strong></td>
+												<td><strong id="sumaWydatkow">{% for item in expenseSum %}{{ item.0 }}{% endfor %} zł</strong></td>
+											</tr>
+										{% endif %}
+								</tbody>
+							  </table>
+							</div>		
+					</section>
+										
+					<section class="col-11 my-2 colb wydatki">
+					
+							<header><h2>Wydatki szczegółowe:</h2></header>
+							
+							<div class="table-responsive">
+							  <table class="table table-hover table-sm table-condensed">
+								<thead>
+								  <tr>
+									<th scope="col">#</th>
+									<th scope="col">Data</th>
+									<th scope="col">Kwota</th>
+									<th scope="col">Sposób płatności</th>
+									<th scope="col">Kategoria</th>
+									<th scope="col">Komentarz</th>
+									<th class="text-right">Akcja</th>
+								  </tr>
+								</thead>
+								<tbody>
+								  <tr>
+										{% if expense is not empty %}
+												{% for item in expense %}
+													<tr>
+														<td>{{ loop.index }}</td>
+														<td>{{ item.dateOfExpense }}</td>
+														<td>{{ item.amount }} zł</td>
+														<td>{{ item.name2 }}</td>
+														<td>{{ item.name }}</td>
+														<td>{{ item.expenseComment }}</td>
+														<td class="text-right">
+															<button type="button" class="btn btn-primary" onClick=""><i class="fa fa-pencil"  aria-hidden="true"></i></button>
+															<button type="button" class="btn btn-danger" onClick=""><i class="fa fa-times"  aria-hidden="true"></i></button>
+														</td>
+													</tr>
+												{% endfor %}
+										{% endif %}
+								</tbody>
+							  </table>
+							</div>				
+		
+					</section>
+					
+					<section class="col-11 text-center my-2 colb bilans">
+							
+							<div id="bilans">
+								<h1>Bilans przychodów i wydatków w wybranym okresie:</h1>
+							</div>
+							<div id="errorBalance" ></div>
+							
+					</section>		
+							
+					<section class="col-11 text-center my-2 colb">
+							
+							<header><h2>Wykres wydatków</h2></header>
+							
+							<div id="piechart"></div>
+				
+					</section>
+		
+				</div>
+				
+			</div>
+			
+		</article>
+										
+	</main>
+{% endblock %}
