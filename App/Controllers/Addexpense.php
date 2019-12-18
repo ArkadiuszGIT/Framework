@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use \Core\View;
-use \App\Auth;
 use \App\Models\Expense;
 use \App\Flash;
 
@@ -25,8 +24,6 @@ class Addexpense extends Authenticated
     protected function before()
     {
 		parent::before();
-        $this->requireLogin();
-		$this->user = Auth::getUser();
 		$this->category = Expense::getUsersExpenseCategory();
 		$this->payment = Expense::getUsersExpensePaymentMethod();
     }

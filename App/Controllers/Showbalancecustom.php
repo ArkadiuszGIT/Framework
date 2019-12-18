@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use \Core\View;
-use \App\Auth;
 use \App\Models\BalanceCustom;
 use \App\Flash;
 
@@ -25,8 +24,6 @@ class Showbalancecustom extends Authenticated
     protected function before()
     {
 		parent::before();
-        $this->requireLogin();
-		$this->user = Auth::getUser();
 		$balanceCustom = new BalanceCustom($_POST);
 		$this->incomeCatSum = $balanceCustom->getUsersIncomesCategorySum();
 		$this->incomeSum = $balanceCustom->getUsersIncomesSum();

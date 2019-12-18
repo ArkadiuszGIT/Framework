@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use \Core\View;
-use \App\Auth;
 use \App\Models\BalanceCurrentYear;
 use \App\Flash;
 
@@ -25,8 +24,6 @@ class Showbalancecurrentyear extends Authenticated
     protected function before()
     {
 		parent::before();
-        $this->requireLogin();
-		$this->user = Auth::getUser();
 		$this->incomeCatSum = BalanceCurrentYear::getUsersIncomesCategorySum();
 		$this->incomeSum = BalanceCurrentYear::getUsersIncomesSum();
 		$this->income = BalanceCurrentYear::getUsersIncomes();

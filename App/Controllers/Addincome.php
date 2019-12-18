@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use \Core\View;
-use \App\Auth;
 use \App\Models\Income;
 use \App\Flash;
 
@@ -25,8 +24,6 @@ class Addincome extends Authenticated
     protected function before()
     {
 		parent::before();
-        $this->requireLogin();
-		$this->user = Auth::getUser();
 		$this->category = Income::getUsersIncomeCategory();
     }
 	

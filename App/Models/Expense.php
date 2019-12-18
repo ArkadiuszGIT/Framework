@@ -19,8 +19,6 @@ class Expense extends \Core\Model
      * @var array
      */
     public $errors = [];
-	public $category = [];
-	public $payment= [];
 	
 	 public function __construct($data = [])
     {

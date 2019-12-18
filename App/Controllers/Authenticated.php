@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use \App\Auth;
 /**
  * Authenticated base controller
  *
@@ -17,5 +18,6 @@ abstract class Authenticated extends \Core\Controller
     protected function before()
     {
         $this->requireLogin();
+		$this->user = Auth::getUser();
     }
 }

@@ -85,6 +85,11 @@ h2
 	font-size: 15px;
 	width:30px;
 }
+@media only screen and (max-width: 575px) {
+  .inputWithIcon i {
+    top:2px;
+  }
+}
 
 .inputWithIcon.inputIconBg i
 {
@@ -146,6 +151,7 @@ h2
 .inputFinance
 {
 	height:39px;
+	min-width: 200px;
 	background-color: #efefef;
 	color: #666;
 	border: 2px solid black;
@@ -433,7 +439,6 @@ input:focus:-ms-input-placeholder
 
 .checkbox
 {
-	margin-left: 40px;
 	margin-top: 5px;
 	white-space: nowrap;
 	font-size: 15px; 
