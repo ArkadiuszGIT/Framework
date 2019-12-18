@@ -20,6 +20,11 @@ class Login extends \Core\Controller
      *
      * @return void
      */
+	public function newAction()
+    {
+        View::renderTemplate('Home/index.html');
+    }
+	
     public function createAction()
     {
         $user = User::authenticate($_POST['log'], $_POST['logPassword']);

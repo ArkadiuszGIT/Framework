@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use PDO;
-use \Core\View;
 
 /**
  * User model
@@ -19,7 +18,7 @@ class Income extends \Core\Model
      * @var array
      */
     public $errors = [];
-	public $category = [];
+
 	
 	 public function __construct($data = [])
     {

@@ -50,7 +50,7 @@ class Signup extends \Core\Controller
     {
         User::activate($this->route_params['token']);
 
-        $this->redirect('/home/activated');
+        $this->redirect('/signup/activated');
     }
 
     /**

@@ -3,9 +3,7 @@
 namespace App\Controllers;
 
 use \Core\View;
-use \App\Auth;
 use \App\Models\Balance;
-use \App\Flash;
 
 /**
  * Items controller (example)
@@ -25,8 +23,6 @@ class Showbalance extends Authenticated
     protected function before()
     {
 		parent::before();
-        $this->requireLogin();
-		$this->user = Auth::getUser();
 		$this->incomeCatSum = Balance::getUsersIncomesCategorySum();
 		$this->incomeSum = Balance::getUsersIncomesSum();
 		$this->income = Balance::getUsersIncomes();

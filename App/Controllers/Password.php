@@ -31,11 +31,12 @@ class Password extends \Core\Controller
      */
     public function requestResetAction()
     {
-        User::sendPasswordReset($_POST['email']);
-		
+		User::sendPasswordReset($_POST['email']);
+
 		Flash::addMessage('Sprawdź email');
-		
+			
 		$this->redirect('/Password/forgot');
+   
     }
 
     /**
@@ -67,9 +68,10 @@ class Password extends \Core\Controller
 
         if ($user->resetPassword($_POST['password'])) {
 
-            //echo "password valid";
-            View::renderTemplate('Password/reset_success.html');
-        
+            Flash::addMessageRegistration('Sukces! Zmiana hasła powiodła się. Możesz się zalogować!');		
+			
+			$this->redirect('/Home/index');
+    
         } else {
 
             View::renderTemplate('Password/reset.html', [

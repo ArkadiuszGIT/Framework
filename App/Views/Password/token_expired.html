@@ -3,9 +3,14 @@
 {% block title %}Forgot password{% endblock %}
 
 {% block body %}
+	<header>
+	
+		<nav class="navbar navbar-dark bg-homebudget navbar-expand-md">
+			<a class="navbar-brand" href="/Home/index"><img src="/img/home.png" alt=""></a>
+		</nav>
+		
+	</header>
 
-    <h1>Request password reset</h1>
-
-    <p>Password reset link invalid or expired, please click <a href="/password/forgot">here</a> to request another one.</p>
+    <p>Wygasł link resetujący hasło, proszę kliknąć <a href="/Password/forgot">tutaj</a> aby wysłać kolejny.</p>
 
 {% endblock %}

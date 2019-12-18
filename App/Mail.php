@@ -3,7 +3,11 @@
 namespace App;
 
 use App\Config;
-use Mailgun\Mailgun;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+require_once '../vendor/autoload.php';
 /**
  * Mail
  *
@@ -24,13 +28,47 @@ class Mail
      */
     public static function send($to, $subject, $text, $html)
     {
-        $mg = new Mailgun(Config::MAILGUN_API_KEY);
-        $domain = Config::MAILGUN_DOMAIN;
+		$mail = new PHPMailer(true);
+			
+		try {
+			//Server settings
+			//$mail->SMTPDebug = 2;                      // Enable verbose debug output
+			$mail->isSMTP();                                            // Send using SMTP
+			$mail->Host       = 'smtp.gmail.com';                    // Set the SMTP server to send through
+			$mail->SMTPAuth   = true;                                   // Enable SMTP authentication
+			$mail->Username   = 'arkadiusz.kawalec.programista@gmail.com';                     // SMTP username
+			$mail->Password   = 'Hasło konta lub hasło wygenerowane dla aplikacji';                               // SMTP password
+			$mail->SMTPSecure = 'ssl';        // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` also accepted
+			$mail->Port       = 465;                                    // TCP port to connect to
 
-        $mg->sendMessage($domain, ['from'    => 'arekkaw@gmail.com',
-                                   'to'      => $to,
-                                   'subject' => $subject,
-                                   'text'    => $text,
-                                   'html'    => $html]);
+			//Recipients
+			$mail->setFrom('arkadiusz.kawalec.programista@gmail.com', 'homebudget.arkadiuszkawalec.it');
+			$mail->addAddress($to);     // Add a recipient
+			//$mail->addAddress('ellen@example.com');               // Name is optional
+			//$mail->addReplyTo($to, 'Information');
+			//$mail->addCC('cc@example.com');
+			//$mail->addBCC('bcc@example.com');
+			$mail->SMTPOptions = array(
+					'ssl' => array(
+					'verify_peer' => false,
+					'verify_peer_name' => false,
+					'allow_self_signed' => true
+					)
+			);
+			// Attachments
+			//$mail->addAttachment('/var/tmp/file.tar.gz');         // Add attachments
+			//$mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
+
+			// Content
+			$mail->isHTML(true);                                  // Set email format to HTML
+			$mail->Subject = $subject;
+			$mail->Body    = $html;
+			$mail->AltBody = $text;
+
+			$mail->send();
+			echo "Message sent";
+		} catch (Exception $e) {
+			echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+		}
     }
 }

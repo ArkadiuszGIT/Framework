@@ -304,6 +304,7 @@ class User extends \Core\Model
     public static function sendPasswordReset($email)
     {
         $user = static::findByEmail($email);
+		
 
         if ($user) {
 
@@ -355,7 +356,7 @@ class User extends \Core\Model
         $text = View::getTemplate('Password/reset_email.txt', ['url' => $url]);
         $html = View::getTemplate('Password/reset_email.html', ['url' => $url]);
 
-        Mail::send($this->email, 'Password reset', $text, $html);
+        Mail::send($this->email, 'Reset hasla', $text, $html);
     }
 
     /**
@@ -401,11 +402,35 @@ class User extends \Core\Model
      *
      * @return boolean  True if the password was updated successfully, false otherwise
      */
+	 public function validatePassword()
+    {
+        // Password
+        if (isset($this->password)) {
+
+            if (strlen($this->password) < 6) {
+                $this->errors[] = 'Hasło musi posiadać od 6 do 20 znaków!';
+            }
+			
+			 if (strlen($this->password) > 20) {
+                $this->errors[] = 'Hasło musi posiadać od 6 do 20 znaków!';
+            }
+
+            if (preg_match('/.*[a-z]+.*/i', $this->password) == 0) {
+                $this->errors[] = 'Hasło musi zawierać conajmniej jedną literę';
+            }
+
+            if (preg_match('/.*\d+.*/i', $this->password) == 0) {
+                $this->errors[] = 'Hasło musi zawierać conajmniej jedną cyfrę';
+            }
+
+        }
+    }
+	
     public function resetPassword($password)
     {
         $this->password = $password;
 
-        $this->validate();
+        $this->validatePassword();
 
         //return empty($this->errors);
         if (empty($this->errors)) {
@@ -416,12 +441,12 @@ class User extends \Core\Model
                     SET password_hash = :password_hash,
                         password_reset_hash = NULL,
                         password_reset_expires_at = NULL
-                    WHERE id = :id';
+                    WHERE userID = :id';
 
             $db = static::getDB();
             $stmt = $db->prepare($sql);
                                                   
-            $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+            $stmt->bindValue(':id', $this->userID, PDO::PARAM_INT);
             $stmt->bindValue(':password_hash', $password_hash, PDO::PARAM_STR);
                                           
             return $stmt->execute();
@@ -437,12 +462,12 @@ class User extends \Core\Model
      */
     public function sendActivationEmail()
     {
-        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/home/activate/' . $this->activation_token;
+        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/signup/activate/' . $this->activation_token;
 
         $text = View::getTemplate('Home/activation_email.txt', ['url' => $url]);
         $html = View::getTemplate('Home/activation_email.html', ['url' => $url]);
 
-        Mail::send($this->email, 'Account activation', $text, $html);
+        Mail::send($this->email, 'Aktywacja konta', $text, $html);
     }
 
     /**
