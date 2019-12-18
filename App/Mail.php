@@ -26,14 +26,6 @@ class Mail
      *
      * @return mixed
      */
-	      /*   $mg = new Mailgun(Config::MAILGUN_API_KEY);
-        $domain = Config::MAILGUN_DOMAIN;
-
-        $mg->sendMessage($domain, ['from'    => 'arkadiusz.kawalec.programista@gmail.com',
-                                   'to'      => $to,
-                                   'subject' => $subject,
-                                   'text'    => $text,
-                                   'html'    => $html]);*/
     public static function send($to, $subject, $text, $html)
     {
 		$mail = new PHPMailer(true);
@@ -45,7 +37,7 @@ class Mail
 			$mail->Host       = 'smtp.gmail.com';                    // Set the SMTP server to send through
 			$mail->SMTPAuth   = true;                                   // Enable SMTP authentication
 			$mail->Username   = 'arkadiusz.kawalec.programista@gmail.com';                     // SMTP username
-			$mail->Password   = 'jffgqvpcnnaccrvz';                               // SMTP password
+			$mail->Password   = 'Hasło konta lub hasło wygenerowane dla aplikacji';                               // SMTP password
 			$mail->SMTPSecure = 'ssl';        // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` also accepted
 			$mail->Port       = 465;                                    // TCP port to connect to
 

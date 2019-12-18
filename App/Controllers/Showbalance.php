@@ -4,7 +4,6 @@ namespace App\Controllers;
 
 use \Core\View;
 use \App\Models\Balance;
-use \App\Flash;
 
 /**
  * Items controller (example)
