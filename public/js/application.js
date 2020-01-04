@@ -38,6 +38,7 @@ function data()
 }
 
 var myMap = new Map();
+myMap.set(0, "Grudzień");
 myMap.set(1, "Styczeń");
 myMap.set(2, "Luty");
 myMap.set(3, "Marzec");
@@ -66,6 +67,8 @@ function dataPreviousBilans()
 		
 		var miesiac = dzisiaj.getMonth();
 		var rok = dzisiaj.getFullYear();
+		if (miesiac == 0)  rok = rok -1;
+
 		
 		$('#h1').html("Bilans z " + myMap.get(miesiac) + " " + rok);
 }

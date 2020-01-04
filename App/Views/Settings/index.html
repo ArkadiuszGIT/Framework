@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block title %}Menu{% endblock %}
+
+{% block body %}
+	<header>
+	
+		<nav class="navbar navbar-dark bg-homebudget navbar-expand-lg">
+		
+			<a class="navbar-brand" href="/Showbalance/balance"><img src="/img/home.png" alt=""></a>
+			
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainmenu" aria-controls="mainmenu" aria-expanded="false" aria-label="Przełącznik nawigacji">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+		
+			<div class="collapse navbar-collapse" id="mainmenu">
+			
+				<ul class="navbar-nav mr-auto">
+				
+					<li class="nav-item">
+							<a class="nav-link" href="/menu/index"><i class="fa fa-home"  aria-hidden="true"></i>  Strona główna </a>
+					</li>
+					
+					<li class="nav-item">
+						<a class="nav-link" href="/addincome/income"><i class="fa fa-dollar"  aria-hidden="true"></i>  Dodaj przychód </a>
+					</li>
+					
+					<li class="nav-item">
+						<a class="nav-link" href="/addexpense/expense"><i class="fa fa-shopping-bag"  aria-hidden="true"></i>  Dodaj wydatek </a>
+					</li>
+					
+					<li class="nav-item" >
+						<a class="nav-link" href="/showbalance/balance"><i class="fa fa-line-chart"  aria-hidden="true"></i>   Przeglądaj bilans</a>
+					</li>
+									
+					<li class="nav-item active">
+						<a class="nav-link" href="/settings/index"><i class="fa fa-cog"  aria-hidden="true"></i>  Ustawienia </a>
+					</li>				
+					
+				</ul>	
+					
+				<div class="uzytkownik">
+						Zalogowany jako: {{ user.login }}
+				</div>
+				<a href="/logout"><button type="button" class="btn btn-light navbar-btn wyloguj"><i class="fa fa-sign-out"  aria-hidden="true"></i>   Wyloguj się</button></a>
+			
+			</div>
+		
+		</nav>
+		
+	</header>
+	
+	<main class="main-page">
+	
+		<article>
+				
+			<div class="container">
+			
+				<div class="row">
+	
+					<div class="col-lg-6 text-center menu">
+					
+						<header>
+					
+							<h1>Ustawienia</h1>
+							
+						</header>
+						
+						<div class="col-12">				
+							<button type="button" class="btn btn-light menuButton"  ><i class="fa fa-dollar"  aria-hidden="true"></i>   Kategoria przychodów</button>
+						</div>	
+						
+						<div class="col-12">		
+							<button type="button" class="btn btn-light menuButton" ><i class="fa fa-shopping-bag"  aria-hidden="true"></i>   Kategoria wydatków</button>
+						</div>	
+						
+						<div class="col-12">		
+							<button type="button" class="btn btn-light menuButton"  ><i class="fa fa-credit-card"  aria-hidden="true"></i>   Sposób płatności</button>
+						</div>
+						
+						<div class="col-12">		
+							<button type="button" class="btn btn-light menuButton" ><i class="fa fa-user"   aria-hidden="true"></i>   Użytkownik</button>
+						</div>
+								
+						<div class="col-12">		
+							<button type="button" class="btn btn-light menuButton" ><i class="fa fa-trash"   aria-hidden="true"></i>   Usuń konto</button>
+						</div>
+						
+					</div>		
+								
+				</div>
+				
+			</div>
+			
+		</article>
+										
+	</main>
+{% endblock %}

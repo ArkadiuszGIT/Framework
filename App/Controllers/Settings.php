@@ -11,7 +11,7 @@ use \App\Flash;
  *
  * PHP version 7.0
  */
-class Profile extends Authenticated
+class Settings extends Authenticated
 {
 
     /**
@@ -31,9 +31,9 @@ class Profile extends Authenticated
      *
      * @return void
      */
-    public function showAction()
+    public function indexAction()
     {
-        View::renderTemplate('Profile/show.html', [
+        View::renderTemplate('Settings/index.html', [
             'user' => $this->user
         ]);
     }
