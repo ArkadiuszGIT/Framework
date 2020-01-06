@@ -1,7 +1,62 @@
 {% extends 'base.html' %}
 
 {% block title %}Menu{% endblock %}
+{% block footer %}
+	<script>
+			$(document).ready(function() {
+				/**
+				 	$('#incomeCategoryButton').click(function() {
+					$.get('/settings/showIncomeCategory', function(data){
+						$('#incomeCategoryList').html(data);
+					})			
+				});
+				
+								$('#incomeCategoryButton').click(function() {
+					$('#incomeCategoryList').load("/settings/showIncomeCategory");			
+				});
+				
+				$('#incomeCategoryButton').click(function() {
+					$.post("/settings/showIncomeCategory", function(data) {
+							$("#incomeCategoryList").html(data);
+					});
+				});
+				
+				$('#incomeCategoryButton').click(function() {
+					$.ajax({
+						type: 'POST',
+						url: '/settings/showIncomeCategory',
+						data: 'id=testdata',
+						dataType: 'json',
+						cache: false,
+						success: function(result) {
+							$('#incomeCategoryList').html(result[0]);
+						},
+					});
+				});
+				 */	
 
+				$('#incomeCategoryButton').click(function() {
+					$('#incomeCategoryList').load("/settings/showIncomeCategory");		
+					$("#incomeCategoryList").toggle();					
+				});
+				
+				$('#expenseCategoryButton').click(function() {
+					$('#expenseCategoryList').load("/settings/showExpenseCategory");
+					$("#expenseCategoryList").toggle();								
+				});
+				
+				$('#paymentMethodsButton').click(function() {
+					$('#paymentMethodsList').load("/settings/showPaymentMethods");
+					$("#paymentMethodsList").toggle();								
+				});
+				
+				$('#userButton').click(function() {
+					$('#userSettings').load("/settings/showUserSettings");
+					$("#userSettings").toggle();								
+				});
+			});		
+	</script>
+{% endblock %}	
 {% block body %}
 	<header>
 	
@@ -67,23 +122,27 @@
 						</header>
 						
 						<div class="col-12">				
-							<button type="button" class="btn btn-light menuButton"  ><i class="fa fa-dollar"  aria-hidden="true"></i>   Kategoria przychodów</button>
+							<button type="button" id="incomeCategoryButton" class="btn btn-light menuButton"  ><i class="fa fa-dollar"  aria-hidden="true"></i>   Kategoria przychodów</button>
+							
+							<div id="incomeCategoryList" style="display: none;"></div>
 						</div>	
 						
 						<div class="col-12">		
-							<button type="button" class="btn btn-light menuButton" ><i class="fa fa-shopping-bag"  aria-hidden="true"></i>   Kategoria wydatków</button>
+							<button type="button" id="expenseCategoryButton" class="btn btn-light menuButton" ><i class="fa fa-shopping-bag"  aria-hidden="true"></i>   Kategoria wydatków</button>
+							
+							<div id="expenseCategoryList" style="display: none;"></div>
 						</div>	
 						
 						<div class="col-12">		
-							<button type="button" class="btn btn-light menuButton"  ><i class="fa fa-credit-card"  aria-hidden="true"></i>   Sposób płatności</button>
+							<button type="button" id="paymentMethodsButton" class="btn btn-light menuButton"  ><i class="fa fa-credit-card"  aria-hidden="true"></i>   Sposób płatności</button>
+							
+							<div id="paymentMethodsList" style="display: none;"></div>
 						</div>
 						
 						<div class="col-12">		
-							<button type="button" class="btn btn-light menuButton" ><i class="fa fa-user"   aria-hidden="true"></i>   Użytkownik</button>
-						</div>
-								
-						<div class="col-12">		
-							<button type="button" class="btn btn-light menuButton" ><i class="fa fa-trash"   aria-hidden="true"></i>   Usuń konto</button>
+							<button type="button" id="userButton" class="btn btn-light menuButton" ><i class="fa fa-user"   aria-hidden="true"></i>   Użytkownik</button>
+							
+							<div id="userSettings" style="display: none;"></div>
 						</div>
 						
 					</div>		

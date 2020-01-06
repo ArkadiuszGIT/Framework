@@ -251,7 +251,7 @@ input[type=date]:focus
 
 .menuButton
 {
-	min-width: 250px;
+	min-width: 280px;
 	background-color: #0D533E;
 	font-size:20px;
 	color: white;
@@ -262,6 +262,12 @@ input[type=date]:focus
 	cursor: pointer;
 	letter-spacing: 2px;
 	outline: none;
+}
+
+.userSettingsButton
+{
+	min-width: 280px;
+	margin-top: 5px;
 }
 
 .g-recaptcha{
@@ -417,6 +423,16 @@ input:focus:-ms-input-placeholder
 	padding: 15px;
 	border-radius: 5px;
 	border: 2px solid #0D533E;
+}
+
+#incomeCategoryList,
+#expenseCategoryList,
+#paymentMethodsList,
+#userSettings
+{
+	padding-top: 10px;
+	margin: auto;
+	width: 280px;
 }
 
 .table-condensed{

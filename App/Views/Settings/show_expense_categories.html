@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Expense Categories{% endblock %}
+
+{% block body %}
+
+	<header><h2 style="text-align:left">Istniejące kategorie:</h2></header>
+				
+	<div class="table-responsive">
+		<table class="table table-hover table-sm table-condensed">
+			<thead>
+			</thead>
+			<tbody>
+				{% if category is not empty %}
+					{% for item in category %}
+							<tr>
+								<td style="text-align:left"><input type="checkbox" name="{{item.name}}"/>{{item.name}}</td>
+								<td class="text-right">
+									<button type="button" class="btn btn-primary" onClick=""><i class="fa fa-pencil"  aria-hidden="true"></i></button>
+									<button type="button" class="btn btn-danger" onClick=""><i class="fa fa-times"  aria-hidden="true"></i></button>
+								</td>
+							</tr>
+						{% endfor %}
+				{% endif %}
+			</tbody>
+		</table>
+		<button type="submit" class="btn btn-success"><i class="fa fa-plus"  aria-hidden="true"></i>   Dodaj nową kategorię</button>
+	</div>
+
+{% endblock %}

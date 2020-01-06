@@ -61,23 +61,4 @@ class Addincome extends Authenticated
         ]);
     }
 
-    /**
-     * Add a new item
-     *
-     * @return void
-     */
-    public function newAction()
-    {
-        echo "new action";
-    }
-
-    /**
-     * Show an item
-     *
-     * @return void
-     */
-    public function showAction()
-    {
-        echo "show action";
-    }
 }

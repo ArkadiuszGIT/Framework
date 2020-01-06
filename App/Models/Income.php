@@ -104,12 +104,14 @@ class Income extends \Core\Model
 		
 		$category = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 		
+		//echo json_encode($category);
 		return $category;
 		
-		/*foreach($stmt as $result) {
+		/*foreach($category as $result) {
 			echo $result['name'], '<br>';
 		}*/
 	
     }
+				
 	
 }

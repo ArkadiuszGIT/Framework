@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Expense Categories{% endblock %}
+
+{% block body %}
+
+	<p style="text-align:left">
+	Login: {{ user.login }}
+	</br>
+	Email: {{ user.email }}
+	</p>
+				
+		<button type="submit" class="btn btn-primary userSettingsButton"><i class="fa fa-pencil"  aria-hidden="true"></i>   Edytuj swoje dane</button>
+		<button type="submit" class="btn btn-primary userSettingsButton"><i class="fa fa-key"  aria-hidden="true"></i>   Zmień hasło</button>
+		<button type="submit" class="btn btn-danger userSettingsButton"><i class="fa fa-trash"  aria-hidden="true"></i>   Usuń wszystkie przychody i wydatki</button>
+		<button type="submit" class="btn btn-danger userSettingsButton"><i class="fa fa-times"  aria-hidden="true"></i>   Usuń konto</button>
+		
+{% endblock %}

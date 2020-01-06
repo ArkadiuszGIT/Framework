@@ -533,7 +533,7 @@ class User extends \Core\Model
 
             $stmt->bindValue(':name', $this->name, PDO::PARAM_STR);
             $stmt->bindValue(':email', $this->email, PDO::PARAM_STR);
-            $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+            $stmt->bindValue(':id', $this->userID, PDO::PARAM_INT);
 
             // Add password if it's set
             if (isset($this->password)) {

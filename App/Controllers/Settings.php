@@ -3,7 +3,8 @@
 namespace App\Controllers;
 
 use \Core\View;
-use \App\Auth;
+use \App\Models\Income;
+use \App\Models\Expense;
 use \App\Flash;
 
 /**
@@ -22,8 +23,6 @@ class Settings extends Authenticated
     protected function before()
     {
         parent::before();
-
-        $this->user = Auth::getUser();
     }
 
     /**
@@ -43,6 +42,47 @@ class Settings extends Authenticated
      *
      * @return void
      */
+	 
+	public function showIncomeCategoryAction()
+    {
+		$this->category = Income::getUsersIncomeCategory();
+		
+		 View::renderTemplate('Settings/show_income_categories.html', [
+            'category' => $this->category
+        ]);
+		
+    }
+	
+	public function showExpenseCategoryAction()
+    {
+		$this->category = Expense::getUsersExpenseCategory();
+		
+		 View::renderTemplate('Settings/show_expense_categories.html', [
+            'category' => $this->category
+        ]);
+		
+    }
+	
+	public function showPaymentMethodsAction()
+    {
+		$this->payment = Expense::getUsersExpensePaymentMethod();
+		
+		 View::renderTemplate('Settings/show_payment_methods.html', [
+            'payment' => $this->payment
+        ]);
+		
+    }
+	
+	public function showUserSettingsAction()
+    {	
+		 View::renderTemplate('Settings/show_user_settings.html', [
+             'user' => $this->user
+        ]);
+		
+    }
+	
+	
+	
     public function editAction()
     {
         View::renderTemplate('Profile/edit.html', [
