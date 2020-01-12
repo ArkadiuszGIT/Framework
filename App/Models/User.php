@@ -107,6 +107,15 @@ class User extends \Core\Model
         if ($this->name == '') {
             $this->errors[] = 'Podaj nazwę użytkownika!';
         }
+		
+		if (strlen($this->name) < 3) {
+                $this->errors[] = 'Imię musi posiadać od 3 do 20 znaków!';
+        }
+			
+		if (strlen($this->name) > 20) {
+                $this->errors[] = 'Imię musi posiadać od 3 do 20 znaków!';
+        }
+		
 		if (static::loginExists($this->name, $this->id ?? null)) {
             $this->errors[] = 'Użytkownik o tej nazwie jest już zarejestrowany!';
         }
@@ -139,17 +148,7 @@ class User extends \Core\Model
             }
 
         }
-		
-		$secret = "6LcXWr0UAAAAANebakfCBeWCgj-R25FwIg2E_Kuj";
-	
-		$check = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$secret.'&response='.$_POST['g-recaptcha-response']);
-	
-		$check = json_decode($check);
-		
-		if ($check->success==false)
-		{
-			$this->errors[] = 'Potwierdź, że nie jesteś botem!';
-		}		
+			
     }
 
     /**

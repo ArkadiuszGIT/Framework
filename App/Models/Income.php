@@ -33,6 +33,26 @@ class Income extends \Core\Model
      *
      * @return void
      */
+	 public function saveNewCategory()
+    {
+       $this->validateCategory();
+
+        if (empty($this->errors)) {
+
+            $sql = 'INSERT INTO incomes_category_assigned_to_users VALUES (NULL, :id, :kategoria )';
+
+            $db = static::getDB();
+            $stmt = $db->prepare($sql);
+			
+			$stmt->bindValue(':id', $_SESSION['user_id'], PDO::PARAM_INT);
+            $stmt->bindValue(':kategoria', $this->categoryName, PDO::PARAM_STR);
+
+            return $stmt->execute();
+        }
+
+        return false;
+    }
+	
     public function save()
     {
         $this->validate();
@@ -56,6 +76,28 @@ class Income extends \Core\Model
 
         return false;
     }
+	
+	public function updateCategory()
+    {
+        $this->validateCategory($this->categoryID);
+
+        if (empty($this->errors)) {
+
+            $sql = 'UPDATE incomes_category_assigned_to_users
+                    SET name = :kategoria WHERE userID = :id AND incomeCategoryAssignedToUserID = :categoryID';
+
+            $db = static::getDB();
+            $stmt = $db->prepare($sql);
+
+			$stmt->bindValue(':id', $_SESSION['user_id'], PDO::PARAM_INT);
+			$stmt->bindValue(':categoryID', $this->categoryID, PDO::PARAM_INT);
+            $stmt->bindValue(':kategoria', $this->categoryName, PDO::PARAM_STR);
+			
+            return $stmt->execute();
+        }
+
+        return false;
+    }
 
     /**
      * Validate current property values, adding valiation error messages to the errors array property
@@ -74,6 +116,25 @@ class Income extends \Core\Model
 		}	
     }
 	
+	 public function validateCategory($ignore_id = null)
+    {
+        if ($this->categoryName == '') {
+            $this->errors[] = 'Podaj nazwę kategorii!';
+        }
+		if (static::categoryNameExists($this->categoryName, $ignore_id)) {
+            $this->errors[] = 'Kategoria o tej nazwie już istnieje!';
+        }
+
+		if (strlen($this->categoryName) < 3) {
+                $this->errors[] = 'Nazwa kategorii musi posiadać od 3 do 20 znaków!';
+        }
+			
+		if (strlen($this->categoryName) > 20) {
+                $this->errors[] = 'Nazwa kategorii musi posiadać od 3 do 20 znaków!';
+        }
+
+    }
+	
 	public function getIncomeCategoryID()
     {
         $sql = 'SELECT * FROM incomes_category_assigned_to_users WHERE name=:kategoria
@@ -82,7 +143,7 @@ class Income extends \Core\Model
         $db = static::getDB();
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':id', $_SESSION['user_id'], PDO::PARAM_INT);
-		$stmt->bindValue(':kategoria', $this->kategoria, PDO::PARAM_STR);
+		$stmt->bindValue(':kategoria', $this->categoryName, PDO::PARAM_STR);
 
         $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
 
@@ -94,7 +155,7 @@ class Income extends \Core\Model
 	
 	public static function getUsersIncomeCategory()
     {
-        $sql = 'SELECT name FROM incomes_category_assigned_to_users WHERE userID = :id';
+        $sql = 'SELECT * FROM incomes_category_assigned_to_users WHERE userID = :id';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
@@ -109,9 +170,50 @@ class Income extends \Core\Model
 		
 		/*foreach($category as $result) {
 			echo $result['name'], '<br>';
-		}*/
-	
+		}*/	
     }
-				
 	
+	public static function deleteUserCategory($categoryName)
+    {
+        $sql = 'DELETE FROM incomes_category_assigned_to_users WHERE name=:kategoria
+					AND userID=:id';
+					
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':id', $_SESSION['user_id'], PDO::PARAM_INT);
+		$stmt->bindValue(':kategoria', $categoryName, PDO::PARAM_STR);
+
+        $stmt->execute();				
+    }
+	
+	public static function categoryNameExists($categoryName, $ignore_id = null)
+    {
+        $category = static::findByCategoryName($categoryName);
+		
+        if ($category) {
+            if ($category->incomeCategoryAssignedToUserID != $ignore_id) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+	
+	public static function findByCategoryName($categoryName)
+    {	
+		$sql = 'SELECT * FROM incomes_category_assigned_to_users WHERE name=:kategoria
+					AND userID=:id';
+					
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':id', $_SESSION['user_id'], PDO::PARAM_INT);
+		$stmt->bindValue(':kategoria', $categoryName, PDO::PARAM_STR);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+
+        $stmt->execute();
+		
+		return $stmt->fetch();
+    }
+					
 }

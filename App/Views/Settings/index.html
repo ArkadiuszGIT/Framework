@@ -106,7 +106,19 @@
 	</header>
 	
 	<main class="main-page">
-	
+		{% for message in flash_messages %}
+			<div class="alert alert-warning">
+				{{ message.body }}
+			</div>
+		{% endfor %}
+		{% if income.errors is not empty %}
+			<p>Errors:</p>
+			<ul>
+				{% for error in income.errors %}
+					<li>{{ error }}</li>
+				{% endfor %}
+			</ul>
+		{% endif %}
 		<article>
 				
 			<div class="container">

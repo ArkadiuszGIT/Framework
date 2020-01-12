@@ -87,7 +87,7 @@ class Expense extends \Core\Model
         $db = static::getDB();
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':id', $_SESSION['user_id'], PDO::PARAM_INT);
-		$stmt->bindValue(':kategoria', $this->kategoria, PDO::PARAM_STR);
+		$stmt->bindValue(':kategoria', $this->categoryName, PDO::PARAM_STR);
 
         $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
 
@@ -99,7 +99,7 @@ class Expense extends \Core\Model
 	
 	public static function getUsersExpenseCategory()
     {
-        $sql = 'SELECT name FROM expenses_category_assigned_to_users WHERE userID = :id';
+        $sql = 'SELECT * FROM expenses_category_assigned_to_users WHERE userID = :id';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
@@ -137,7 +137,7 @@ class Expense extends \Core\Model
 	
 	public static function getUsersExpensePaymentMethod()
     {
-        $sql = 'SELECT name FROM payment_methods_assigned_to_users WHERE userID = :id';
+        $sql = 'SELECT * FROM payment_methods_assigned_to_users WHERE userID = :id';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);

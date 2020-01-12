@@ -48,6 +48,7 @@ class Settings extends Authenticated
 		$this->category = Income::getUsersIncomeCategory();
 		
 		 View::renderTemplate('Settings/show_income_categories.html', [
+			'user' => $this->user,
             'category' => $this->category
         ]);
 		
@@ -58,6 +59,7 @@ class Settings extends Authenticated
 		$this->category = Expense::getUsersExpenseCategory();
 		
 		 View::renderTemplate('Settings/show_expense_categories.html', [
+			'user' => $this->user,
             'category' => $this->category
         ]);
 		
@@ -68,6 +70,7 @@ class Settings extends Authenticated
 		$this->payment = Expense::getUsersExpensePaymentMethod();
 		
 		 View::renderTemplate('Settings/show_payment_methods.html', [
+			'user' => $this->user,
             'payment' => $this->payment
         ]);
 		
@@ -77,38 +80,67 @@ class Settings extends Authenticated
     {	
 		 View::renderTemplate('Settings/show_user_settings.html', [
              'user' => $this->user
-        ]);
+        ]);		
+    }
+	
+	public function deleteIncomeCategory()
+    {	
+		Income::deleteUserCategory($_POST['deleteIncomeCategory']);
+		
+		Flash::addMessage('Sukces! Kategoria została poprawnie usunięta!');		
 		
     }
 	
-	
-	
-    public function editAction()
+	public function validateIncomeCategoryAction()
     {
-        View::renderTemplate('Profile/edit.html', [
-            'user' => $this->user
-        ]);
+        $is_valid = ! Income::categoryNameExists($_GET['categoryName'], $_GET['ignore_id'] ?? null);
+        
+        header('Content-Type: application/json');
+        echo json_encode($is_valid);
     }
-
-    /**
-     * Update the profile
-     *
-     * @return void
-     */
-    public function updateAction()
+	
+	public function addIncomeCategoryAction()
     {
-        if ($this->user->updateProfile($_POST)) {
+        $income = new Income($_POST);
 
-            Flash::addMessage('Changes saved');
-
-            $this->redirect('/profile/show');
+        if ($income->saveNewCategory()) {
+			
+			Flash::addMessage('Sukces! Nazwa kategorii została poprawnie dodana!');		
 
         } else {
-
-            View::renderTemplate('Profile/edit.html', [
+			
+			Flash::addMessage('Niestety! Nie udało się dodać kategorii', Flash::WARNING);		
+			
+            View::renderTemplate('settings/index.html', [
+				'income' => $income,
                 'user' => $this->user
             ]);
 
         }
+    }
+
+    public function updateIncomeCategoryAction()
+    {
+		 $income = new Income($_POST);
+		 
+        if ($income->updateCategory()) {
+
+            Flash::addMessage('Zmiany zapisane!');
+
+        } else {
+			
+			Flash::addMessage('Niestety! Nie udało się edytować kategorii', Flash::WARNING);		
+			
+            View::renderTemplate('settings/index.html', [
+                'income' => $income,
+                'user' => $this->user
+            ]);
+
+        }
+    }
+	
+	public function modalSuccessAction()
+    {	
+		View::renderTemplate('Settings/success.html');		
     }
 }

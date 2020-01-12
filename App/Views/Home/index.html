@@ -13,6 +13,22 @@
 					function recaptchaCallback() {
 						$('#hiddenRecaptcha').valid();
 					};
+					
+					jQuery.validator.addMethod("validPassword", function(value, element) {
+							if (value != '') {
+								if (value.match(/.*[a-z]+.*/i) == null) {
+									return false;
+								}
+								if (value.match(/.*\d+.*/) == null) {
+									return false;
+								}
+							}
+
+							return true;
+						},
+						'Hasło musi zawierać conajmniej jedną literę i jeden numer'
+					);
+					
 					jQuery.validator.addMethod("validUserName", function(value, element) {
        
 							if (value != '') {
