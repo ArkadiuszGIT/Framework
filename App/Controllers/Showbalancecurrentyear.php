@@ -14,12 +14,6 @@ use \App\Models\BalanceCurrentYear;
 class Showbalancecurrentyear extends Authenticated
 {
 
-    /**
-     * Require the user to be authenticated before giving access to all methods in the controller
-     *
-     * @return void
-     */
-
     protected function before()
     {
 		parent::before();
@@ -31,11 +25,7 @@ class Showbalancecurrentyear extends Authenticated
 		$this->expense = BalanceCurrentYear::getUsersExpenses();
 		$this->expenseChart = BalanceCurrentYear::getExpensesChart();
     }
-    /**
-     * Items index
-     *
-     * @return void
-     */
+
     public function balanceAction()
     {
         View::renderTemplate('balance/balanceCurrentYear.html', [
@@ -50,23 +40,4 @@ class Showbalancecurrentyear extends Authenticated
         ]);
     }
 
-    /**
-     * Add a new item
-     *
-     * @return void
-     */
-    public function newAction()
-    {
-        echo "new action";
-    }
-
-    /**
-     * Show an item
-     *
-     * @return void
-     */
-    public function showAction()
-    {
-        echo "show action";
-    }
 }

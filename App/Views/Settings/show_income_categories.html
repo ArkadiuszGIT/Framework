@@ -7,7 +7,7 @@
 	
 	<script>
 			$(document).ready(function() {
-					
+				
 					$(".editForm").each(function(){
 						var categoryID = $(this).find('#categoryID').val();
 						$(this).validate({
@@ -17,7 +17,7 @@
 									minlength: 3,
 									maxlength: 20,
 									remote: {
-										url: '/settings/validate-IncomeCategory',
+										url: '/Settingsincome/validate-IncomeCategory',
 										data: {
 											ignore_id: function() {
 												return categoryID;
@@ -43,7 +43,7 @@
 								required: true,
 								minlength: 3,
 								maxlength: 20,
-								remote: '/settings/validate-IncomeCategory'
+								remote: '/Settingsincome/validate-IncomeCategory'
 							}
 						},
 						messages: {
@@ -78,7 +78,7 @@
 								type: type,
 								data: data,
 								success: function(response) {
-									$(that).load("/settings/modalSuccess");
+									$(that).load("/settingsincome/modalSuccess");
 								}
 							});
 							
@@ -101,18 +101,18 @@
 					{% if category is not empty %}
 						{% for item in category %}
 								<tr>
-									<td style="text-align:left"><input type="checkbox" id="{{item.name}}checkbox" name="{{item.name}}checkbox"/>{{item.name}}</td>
+									<td style="text-align:left"><input type="checkbox" name="{{item.name}}"/>{{item.name}}</td>
 									<td class="text-right">
-										<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#edit{{loop.index}}" data-backdrop="static" data-keyboard="false"><i class="fa fa-pencil"  aria-hidden="true"></i></button>
+										<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editIncome{{loop.index}}" data-backdrop="static" data-keyboard="false"><i class="fa fa-pencil"  aria-hidden="true"></i></button>
 										
-										<div class="modal" id="edit{{loop.index}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+										<div class="modal" id="editIncome{{loop.index}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 										  <div class="modal-dialog" role="document" >
 											<div class="modal-content">
 												  <div class="modal-header">
 													<h5 class="modal-title" id="exampleModalLabel">Edycja kategorii:</h5>
 												  </div>
 												  <div style="text-align:left"  class="modal-body">
-													<form action="/settings/updateIncomeCategory" class="ajax editForm"  method="post" >
+													<form action="/Settingsincome/updateIncomeCategory" class="ajax editForm"  method="post" >
 														<div class="form-group">
 															<div class="registrationInputWithIcon inputIconBg">
 																<input type = "text" class="form-control inputFinance" name="categoryName" id="categoryName"  value = "{{item.name}}"  require/>
@@ -132,16 +132,16 @@
 										  </div>
 										</div>
 										
-										<button type="button" class="btn btn-danger" data-toggle="modal" data-target='#delete{{loop.index}}' data-backdrop="static" data-keyboard="false"><i class="fa fa-times"  aria-hidden="true"></i></button>
+										<button type="button" class="btn btn-danger" data-toggle="modal" data-target='#deleteIncome{{loop.index}}' data-backdrop="static" data-keyboard="false"><i class="fa fa-times"  aria-hidden="true"></i></button>
 										
-										<div class="modal" id='delete{{loop.index}}' tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+										<div class="modal" id='deleteIncome{{loop.index}}' tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
 										  <div class="modal-dialog" role="document" >
 											<div class="modal-content">
 												  <div class="modal-header">
 													<h5 class="modal-title" id="deleteModalLabel">Potwierdzenie usunięcia kategorii:</h5>
 												  </div>
 												  <div class="modal-body">
-													<form action="/settings/deleteIncomeCategory" class="ajax deleteForm" method="post" >
+													<form action="/Settingsincome/deleteIncomeCategory" class="ajax deleteForm" method="post" >
 														<div class="form-group">
 															<p style="text-align:left">Czy na pewno chcesz usunąć kategorię: "{{item.name}}" ?</p> 
 															<input type = "hidden" id = "deleteIncomeCategory"  name = "deleteIncomeCategory" value = "{{item.name}}" />
@@ -162,16 +162,16 @@
 					{% endif %}
 				</tbody>
 			</table>
-			<button type="button" class="btn btn-success" data-toggle="modal" data-target = '#addCategory' data-backdrop="static" data-keyboard="false"><i class="fa fa-plus"  aria-hidden="true"></i>   Dodaj nową kategorię</button>
+			<button type="button" class="btn btn-success" data-toggle="modal" data-target = '#addIncomeCategory' data-backdrop="static" data-keyboard="false"><i class="fa fa-plus"  aria-hidden="true"></i>   Dodaj nową kategorię</button>
 			
-			<div class="modal" id="addCategory" tabindex="-1" role="dialog"  aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal" id="addIncomeCategory" tabindex="-1" role="dialog"  aria-labelledby="exampleModalLabel" aria-hidden="true">
 			  <div class="modal-dialog" role="document" >
 				<div class="modal-content">
 					  <div class="modal-header">
 						<h5 class="modal-title" id="exampleModalLabel">Nowa kategoria:</h5>
 					  </div>
 					  <div style="text-align:left"  class="modal-body">
-						<form  action="/settings/addIncomeCategory" id="addCategoryForm"  class="ajax"  method="post" >
+						<form  action="/Settingsincome/addIncomeCategory" id="addCategoryForm"  class="ajax"  method="post" >
 							<div class="form-group">
 								<div class="registrationInputWithIcon inputIconBg">
 									<input type = "text" class="form-control inputFinance" id="categoryName"  name="categoryName" placeholder="kategoria" require/>

@@ -13,13 +13,6 @@ use \App\Models\BalancePrevious;
 //class Items extends \Core\Controller
 class Showbalanceprevious extends Authenticated
 {
-
-    /**
-     * Require the user to be authenticated before giving access to all methods in the controller
-     *
-     * @return void
-     */
-
     protected function before()
     {
 		parent::before();
@@ -31,11 +24,7 @@ class Showbalanceprevious extends Authenticated
 		$this->expense = BalancePrevious::getUsersExpenses();
 		$this->expenseChart = BalancePrevious::getExpensesChart();
     }
-    /**
-     * Items index
-     *
-     * @return void
-     */
+
     public function balanceAction()
     {
         View::renderTemplate('balance/balancePrevious.html', [
@@ -48,25 +37,5 @@ class Showbalanceprevious extends Authenticated
 			'income' => $this->income,
             'user' => $this->user,
         ]);
-    }
-
-    /**
-     * Add a new item
-     *
-     * @return void
-     */
-    public function newAction()
-    {
-        echo "new action";
-    }
-
-    /**
-     * Show an item
-     *
-     * @return void
-     */
-    public function showAction()
-    {
-        echo "show action";
     }
 }

@@ -14,12 +14,6 @@ use \App\Models\BalanceCustom;
 class Showbalancecustom extends Authenticated
 {
 
-    /**
-     * Require the user to be authenticated before giving access to all methods in the controller
-     *
-     * @return void
-     */
-
     protected function before()
     {
 		parent::before();
@@ -34,11 +28,7 @@ class Showbalancecustom extends Authenticated
 		$this->firstday = $balanceCustom->getFirstDay();
 		$this->lastday = $balanceCustom->getLastDay();
     }
-    /**
-     * Items index
-     *
-     * @return void
-     */
+
     public function balanceAction()
     {	
         View::renderTemplate('balance/balanceCustom.html', [
@@ -53,25 +43,5 @@ class Showbalancecustom extends Authenticated
 			'income' => $this->income,
             'user' => $this->user,
         ]);
-    }
-
-    /**
-     * Add a new item
-     *
-     * @return void
-     */
-    public function newAction()
-    {
-        echo "new action";
-    }
-
-    /**
-     * Show an item
-     *
-     * @return void
-     */
-    public function showAction()
-    {
-        echo "show action";
     }
 }

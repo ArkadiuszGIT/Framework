@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 
-{% block title %}Sukces{% endblock %}
+{% block title %}User Success{% endblock %}
 {% block footer %}
 	<script src="/js/application.js"></script>
 	
 	<script>
 			$(document).ready(function() {
 					
-					$('#closeButton').click(function() {
-						$('#incomeCategoryList').load("/settings/showIncomeCategory");					
-					});
+				$('#closeButton').click(function() {
+					$('#userSettings').load("/Settings/showUserSettings");						
+				});
 									
 			});
 	</script>
@@ -20,10 +20,10 @@
 									{{ message.body }}
 								</div>
 							{% endfor %}
-							{% if income.errors is not empty %}
+							{% if user.errors is not empty %}
 								<p>Errors:</p>
 								<ul>
-									{% for error in income.errors %}
+									{% for error in user.errors %}
 										<li>{{ error }}</li>
 									{% endfor %}
 								</ul>

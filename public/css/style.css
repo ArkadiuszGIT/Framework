@@ -172,7 +172,11 @@ h2
 	outline: none;
 	margin-top: 10px !important;
 }
-
+input[type=number],
+input[type=date]
+{
+	width: 200px;
+}
 input[type=text],
 input[type=email],
 input[type=password]
@@ -478,6 +482,12 @@ a:hover { color: #428C42; }
 	text-align: center;
     border: 1px solid #ccc;
     padding: 6px;
+}
+
+input[type="text"]:disabled ,
+input[type="number"]:disabled 
+{
+	border: 2px solid grey;
 }
 
 /*

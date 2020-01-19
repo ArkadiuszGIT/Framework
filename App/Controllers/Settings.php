@@ -3,77 +3,22 @@
 namespace App\Controllers;
 
 use \Core\View;
-use \App\Models\Income;
-use \App\Models\Expense;
+use \App\Models\User;
 use \App\Flash;
 
-/**
- * Profile controller
- *
- * PHP version 7.0
- */
 class Settings extends Authenticated
 {
 
-    /**
-     * Before filter - called before each action method
-     *
-     * @return void
-     */
     protected function before()
     {
         parent::before();
     }
 
-    /**
-     * Show the profile
-     *
-     * @return void
-     */
     public function indexAction()
     {
         View::renderTemplate('Settings/index.html', [
             'user' => $this->user
         ]);
-    }
-
-    /**
-     * Show the form for editing the profile
-     *
-     * @return void
-     */
-	 
-	public function showIncomeCategoryAction()
-    {
-		$this->category = Income::getUsersIncomeCategory();
-		
-		 View::renderTemplate('Settings/show_income_categories.html', [
-			'user' => $this->user,
-            'category' => $this->category
-        ]);
-		
-    }
-	
-	public function showExpenseCategoryAction()
-    {
-		$this->category = Expense::getUsersExpenseCategory();
-		
-		 View::renderTemplate('Settings/show_expense_categories.html', [
-			'user' => $this->user,
-            'category' => $this->category
-        ]);
-		
-    }
-	
-	public function showPaymentMethodsAction()
-    {
-		$this->payment = Expense::getUsersExpensePaymentMethod();
-		
-		 View::renderTemplate('Settings/show_payment_methods.html', [
-			'user' => $this->user,
-            'payment' => $this->payment
-        ]);
-		
     }
 	
 	public function showUserSettingsAction()
@@ -83,64 +28,83 @@ class Settings extends Authenticated
         ]);		
     }
 	
-	public function deleteIncomeCategory()
-    {	
-		Income::deleteUserCategory($_POST['deleteIncomeCategory']);
-		
-		Flash::addMessage('Sukces! Kategoria została poprawnie usunięta!');		
-		
-    }
-	
-	public function validateIncomeCategoryAction()
+	public function updatePasswordAction()
     {
-        $is_valid = ! Income::categoryNameExists($_GET['categoryName'], $_GET['ignore_id'] ?? null);
-        
-        header('Content-Type: application/json');
-        echo json_encode($is_valid);
-    }
-	
-	public function addIncomeCategoryAction()
-    {
-        $income = new Income($_POST);
+		 
+        if ($this->user->updatePassword($_POST)) {
 
-        if ($income->saveNewCategory()) {
-			
-			Flash::addMessage('Sukces! Nazwa kategorii została poprawnie dodana!');		
+            Flash::addMessage('Hasło zostało zmienione!');
 
         } else {
 			
-			Flash::addMessage('Niestety! Nie udało się dodać kategorii', Flash::WARNING);		
+			Flash::addMessage('Niestety! Nie udało się edytować hasła', Flash::WARNING);		
 			
             View::renderTemplate('settings/index.html', [
-				'income' => $income,
                 'user' => $this->user
             ]);
 
         }
     }
-
-    public function updateIncomeCategoryAction()
+	public function updateDataAction()
     {
-		 $income = new Income($_POST);
 		 
-        if ($income->updateCategory()) {
+        if ($this->user->updateProfile($_POST)) {
 
             Flash::addMessage('Zmiany zapisane!');
 
         } else {
 			
-			Flash::addMessage('Niestety! Nie udało się edytować kategorii', Flash::WARNING);		
+			Flash::addMessage('Niestety! Nie udało się edytować profilu', Flash::WARNING);		
 			
             View::renderTemplate('settings/index.html', [
-                'income' => $income,
                 'user' => $this->user
             ]);
 
         }
     }
 	
+	public function deleteFinancesAction()
+    {	
+
+		if ($this->user->deleteUserFinances()) {
+			
+			Flash::addMessage('Sukces! Wszystkie przychody i wydatki zostały poprawnie usunięte!');		
+
+        } else {
+			
+			Flash::addMessage('Niestety! Nie udało się usunąć przychodów i wydatków', Flash::WARNING);		
+			
+            View::renderTemplate('settings/index.html', [
+                'user' => $this->user
+            ]);
+
+        }		
+    }
+	
+	public function deleteAccountAction()
+    {	
+
+		if ($this->user->deleteUserAccount()) {
+			
+			Flash::addMessageRegistration('Sukces! Konto zostało poprawnie usunięte!');
+
+			$this->redirect('/home/index');
+
+        } else {
+			
+			Flash::addMessage('Niestety! Nie udało się usunąć konta', Flash::WARNING);		
+			
+            View::renderTemplate('settings/index.html', [
+                'user' => $this->user
+            ]);
+
+        }		
+    }
+	
+	
 	public function modalSuccessAction()
     {	
-		View::renderTemplate('Settings/success.html');		
+		View::renderTemplate('Settings/user_success.html');		
     }
+	
 }

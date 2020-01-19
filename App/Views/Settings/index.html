@@ -4,49 +4,25 @@
 {% block footer %}
 	<script>
 			$(document).ready(function() {
-				/**
-				 	$('#incomeCategoryButton').click(function() {
-					$.get('/settings/showIncomeCategory', function(data){
-						$('#incomeCategoryList').html(data);
-					})			
+				$(window).keydown(function(event){
+					if(event.keyCode == 13) {
+					  event.preventDefault();
+					  return false;
+					}
 				});
-				
-								$('#incomeCategoryButton').click(function() {
-					$('#incomeCategoryList').load("/settings/showIncomeCategory");			
-				});
-				
-				$('#incomeCategoryButton').click(function() {
-					$.post("/settings/showIncomeCategory", function(data) {
-							$("#incomeCategoryList").html(data);
-					});
-				});
-				
-				$('#incomeCategoryButton').click(function() {
-					$.ajax({
-						type: 'POST',
-						url: '/settings/showIncomeCategory',
-						data: 'id=testdata',
-						dataType: 'json',
-						cache: false,
-						success: function(result) {
-							$('#incomeCategoryList').html(result[0]);
-						},
-					});
-				});
-				 */	
 
 				$('#incomeCategoryButton').click(function() {
-					$('#incomeCategoryList').load("/settings/showIncomeCategory");		
+					$('#incomeCategoryList').load("/settingsincome/showIncomeCategory");		
 					$("#incomeCategoryList").toggle();					
 				});
 				
 				$('#expenseCategoryButton').click(function() {
-					$('#expenseCategoryList').load("/settings/showExpenseCategory");
+					$('#expenseCategoryList').load("/settingsexpense/showExpenseCategory");
 					$("#expenseCategoryList").toggle();								
 				});
 				
 				$('#paymentMethodsButton').click(function() {
-					$('#paymentMethodsList').load("/settings/showPaymentMethods");
+					$('#paymentMethodsList').load("/settingsexpense/showPaymentMethods");
 					$("#paymentMethodsList").toggle();								
 				});
 				
@@ -119,6 +95,23 @@
 				{% endfor %}
 			</ul>
 		{% endif %}
+		{% if expense.errors is not empty %}
+			<p>Errors:</p>
+			<ul>
+				{% for error in expense.errors %}
+					<li>{{ error }}</li>
+				{% endfor %}
+			</ul>
+		{% endif %}
+		{% if user.errors is not empty %}
+        <p>Errors:</p>
+        <ul>
+            {% for error in user.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+			</ul>
+		{% endif %}
+
 		<article>
 				
 			<div class="container">

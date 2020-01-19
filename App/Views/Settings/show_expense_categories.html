@@ -1,30 +1,207 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
 {% block title %}Expense Categories{% endblock %}
 
+{% block footer %}
+	<script src="/js/application.js"></script>
+	
+	<script>
+			$(document).ready(function() {
+					
+					//JEZELI LIMIT>0 to CHECK ZAZNACZONY
+					//$('.checkme').click(function() {
+						//$('.expenseLimit').prop('disabled', true);			
+					//});
+					$(".editExpenseForm").each(function(){
+						var categoryID = $(this).find('#categoryID').val();
+						$(this).validate({
+							rules: {
+								categoryName: {
+									required: true,
+									minlength: 3,
+									maxlength: 20,
+									remote: {
+										url: '/Settingsexpense/validate-ExpenseCategory',
+										data: {
+											ignore_id: function() {
+												return categoryID;
+											}
+										}
+									}
+								}
+							},
+							messages: {
+								categoryName: {
+									required: 'Podaj nazwę kategorii!',
+									minlength: 'Nazwa kategorii powinna zawierać od 3 do 20 znaków!',
+									maxlength: 'Nazwa kategorii powinna zawierać od 3 do 20 znaków!',
+									remote: 'Kategoria o tej nazwie już istnieje!'
+								}
+							}
+						});
+					})	
+					
+					$("#addExpenseCategoryForm").validate({
+						rules: {
+							categoryName: {
+								required: true,
+								minlength: 3,
+								maxlength: 20,
+								remote: '/Settingsexpense/validate-ExpenseCategory'
+							}
+						},
+						messages: {
+							categoryName: {
+								required: 'Podaj nazwę kategorii!',
+								minlength: 'Nazwa kategorii powinna zawierać od 3 do 20 znaków!',
+								maxlength: 'Nazwa kategorii powinna zawierać od 3 do 20 znaków!',
+								remote: 'Kategoria o tej nazwie już istnieje!'
+							}
+						}
+					});
+					
+					$('form.expense').on('submit', function(){
+						var that = $(this);
+						if(! that.valid()) return false;
+						else{
+							url = that.attr('action'),
+							type = that.attr('method'),
+							id = that.attr('id'),
+							data = {};
+							
+							that.find('[name]').each(function() {
+								var that = $(this),
+									name = that.attr('name'),
+									value = that.val();					
+								
+								data[name] = value;
+							}) ;
+							
+							$.ajax({
+								url: url,
+								type: type,
+								data: data,
+								async: false, 
+								success: function(response) {
+									$(that).load("/settingsexpense/modalSuccess");
+								}
+							});
+							
+							return false;
+						}
+						
+					});		
+			});
+	</script>
+{% endblock %}	
 {% block body %}
-
 	<header><h2 style="text-align:left">Istniejące kategorie:</h2></header>
-				
-	<div class="table-responsive">
-		<table class="table table-hover table-sm table-condensed">
-			<thead>
-			</thead>
-			<tbody>
-				{% if category is not empty %}
-					{% for item in category %}
-							<tr>
-								<td style="text-align:left"><input type="checkbox" name="{{item.name}}"/>{{item.name}}</td>
-								<td class="text-right">
-									<button type="button" class="btn btn-primary" onClick=""><i class="fa fa-pencil"  aria-hidden="true"></i></button>
-									<button type="button" class="btn btn-danger" onClick=""><i class="fa fa-times"  aria-hidden="true"></i></button>
-								</td>
-							</tr>
-						{% endfor %}
-				{% endif %}
-			</tbody>
-		</table>
-		<button type="submit" class="btn btn-success"><i class="fa fa-plus"  aria-hidden="true"></i>   Dodaj nową kategorię</button>
-	</div>
+	<main>
+
+		<div class="table-responsive">
+			<table class="table table-hover table-sm table-condensed">
+				<thead>
+				</thead>
+				<tbody>
+					{% if category is not empty %}
+						{% for item in category %}
+								<tr>
+									<td style="text-align:left"><input type="checkbox" name="{{item.name}}"/>{{item.name}}</td>
+									<td class="text-right">
+										<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editExpense{{loop.index}}" data-backdrop="static" data-keyboard="false"><i class="fa fa-pencil"  aria-hidden="true"></i></button>
+										
+										<div class="modal" id="editExpense{{loop.index}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+										  <div class="modal-dialog" role="document" >
+											<div class="modal-content">
+												  <div class="modal-header">
+													<h5 class="modal-title" id="exampleModalLabel">Edycja kategorii:</h5>
+												  </div>
+												  <div style="text-align:left"  class="modal-body">
+													<form action="/Settingsexpense/updateExpenseCategory" class="expense editExpenseForm"  method="post" >
+														<div class="form-group">
+															<div class="registrationInputWithIcon inputIconBg">
+																<input type = "text" class="form-control inputFinance" name="categoryName" id="categoryName"  value = "{{item.name}}"  require/>
+																<i class="fa fa-dollar"  aria-hidden="true"></i>
+															</div>
+														</div>
+														<div class="form-group">
+															<input type = "hidden" id = "categoryID"  name = "categoryID" value = "{{item.expenseCategoryAssignedToUserID}}" />
+														</div>
+														<div class="form-group">
+															<input type="checkbox" id="checkme" name="checkme" class="checkme" onchange="document.getElementById('expenseLimit{{loop.index}}').disabled = !this.checked;"/>Limit
+															<div class="registrationInputWithIcon inputIconBg">
+																<input type="number" id="expenseLimit{{loop.index}}" name="expenseLimit" step="0.01" class="form-control inputFinance expenseLimit"  value="" disabled>
+																<i class="fa fa-dollar"  aria-hidden="true"></i>
+															</div>
+														 </div>
+													    <div class="modal-footer">
+														  <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+														  <button type="submit"  class="btn btn-primary" >Zapisz</button>
+													    </div>
+													</form>
+												  </div>
+											</div>
+										  </div>
+										</div>
+										
+										<button type="button" class="btn btn-danger" data-toggle="modal" data-target='#deleteExpense{{loop.index}}' data-backdrop="static" data-keyboard="false"><i class="fa fa-times"  aria-hidden="true"></i></button>
+										
+										<div class="modal" id='deleteExpense{{loop.index}}' tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+										  <div class="modal-dialog" role="document" >
+											<div class="modal-content">
+												  <div class="modal-header">
+													<h5 class="modal-title" id="deleteModalLabel">Potwierdzenie usunięcia kategorii:</h5>
+												  </div>
+												  <div class="modal-body">
+													<form action="/Settingsexpense/deleteExpenseCategory" class="expense deleteForm" method="post" >
+														<div class="form-group">
+															<p style="text-align:left">Czy na pewno chcesz usunąć kategorię: "{{item.name}}" ?</p> 
+															<input type = "hidden" id = "deleteExpenseCategory"  name = "deleteExpenseCategory" value = "{{item.name}}" />
+														</div>
+													    <div class="modal-footer">
+														  <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+														  <button type="submit" class="btn btn-danger"  >Usuń</button>
+													    </div>
+													</form>
+												  </div>
+											</div>
+										  </div>
+										</div>
+										
+									</td>
+								</tr>
+							{% endfor %}
+					{% endif %}
+				</tbody>
+			</table>
+			<button type="button" class="btn btn-success" data-toggle="modal" data-target = '#addExpenseCategory' data-backdrop="static" data-keyboard="false"><i class="fa fa-plus"  aria-hidden="true"></i>   Dodaj nową kategorię</button>
+			
+			<div class="modal" id="addExpenseCategory" tabindex="-1" role="dialog"  aria-labelledby="exampleModalLabel" aria-hidden="true">
+			  <div class="modal-dialog" role="document" >
+				<div class="modal-content">
+					  <div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Nowa kategoria:</h5>
+					  </div>
+					  <div style="text-align:left"  class="modal-body">
+						<form  action="/Settingsexpense/addExpenseCategory" id="addExpenseCategoryForm"  class="expense"  method="post" >
+							<div class="form-group">
+								<div class="registrationInputWithIcon inputIconBg">
+									<input type = "text" class="form-control inputFinance" id="categoryName"  name="categoryName" placeholder="kategoria" require/>
+									<i class="fa fa-dollar"  aria-hidden="true"></i>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+								<button type="submit"  class="btn btn-success" >Zapisz</button>
+							</div>
+						</form>
+					  </div>
+				</div>
+			  </div>
+			</div>
+			
+		</div>
+	
+	</main>
 
 {% endblock %}

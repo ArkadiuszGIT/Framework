@@ -183,7 +183,7 @@ class Income extends \Core\Model
         $stmt->bindValue(':id', $_SESSION['user_id'], PDO::PARAM_INT);
 		$stmt->bindValue(':kategoria', $categoryName, PDO::PARAM_STR);
 
-        $stmt->execute();				
+        return $stmt->execute();				
     }
 	
 	public static function categoryNameExists($categoryName, $ignore_id = null)
