@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Limit{% endblock %}
+
+{% block footer %}
+	<script src="/js/application.js"></script>
+	
+	<script>
+			$(document).ready(function() {
+				$('#limitInformation').html("<strong>Informacje o limicie:</strong> możesz jeszcze wydać: <strong>{{difference}} zł</strong> w kategorii <strong>{{category.name}}</strong>.");
+			});
+	</script>
+{% endblock %}	
+{% block body %}
+	<div class="table-responsive">
+			<table class="table table-sm table-condensed table-success">
+			<thead>
+			  <tr>
+				<th scope="col">Limit:</th>
+				<th scope="col">Dotychczas wydano:</th>
+				<th scope="col">Różnica:</th>
+				<th scope="col">Wydatki + wpisana kwota:</th>
+			  </tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>{{ category.expenseLimit }} zł</td>
+					<td>{{ categorySum.0 }} zł</td>
+					<td>{{ difference}}  zł</td>
+					<td>{{ expenseSum}}  zł</td>
+				</tr>
+			</tbody>
+		  </table>
+	</div>
+{% endblock %}

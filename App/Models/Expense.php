@@ -97,15 +97,45 @@ class Expense extends \Core\Model
 
         return false;
     }
+	
+	public static function getUsersExpensesCategorySum($expenseDate, $categoryName)
+    {
+		$year = date("Y",strtotime($expenseDate));
+		$month = date("m",strtotime($expenseDate));
+		
+		$sql = 'SELECT SUM(exp.amount) FROM expenses exp INNER JOIN expenses_category_assigned_to_users expcat ON exp.expenseCategoryAssignedToUserID = expcat.expenseCategoryAssignedToUserID WHERE exp.userID = :id AND exp.dateOfExpense >= :firstday AND exp.dateOfExpense <= :lastday AND expcat.name = :kategoria';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':id', $_SESSION['user_id'], PDO::PARAM_INT);
+		$stmt->bindValue(':firstday', date("{$year}-{$month}-01"), PDO::PARAM_STR);
+		$stmt->bindValue(':lastday', date("{$year}-{$month}-31"), PDO::PARAM_STR);
+		$stmt->bindValue(':kategoria', $categoryName, PDO::PARAM_STR);
+		
+		//$stmt->bindValue(':firstday', date("Y-m-01", mktime(0, 0, 0, 1, $month, $year)), PDO::PARAM_STR);
+		//$stmt->bindValue(':lastday', date("Y-m-31", mktime(0, 0, 0, 31, $month, $year)), PDO::PARAM_STR);
+		
+		
+        $stmt->execute();
+
+		$expensesCatSum = $stmt->fetch();
+		
+		//echo date("Y-n-j",strtotime("-1 month"));
+		return $expensesCatSum;	
+    }
 		
 	public function updateCategory()
     {
         $this->validateCategory($this->categoryID);
+		
+		if (isset($this->expenseLimit)) {
+            $this->validateLimit();
+        }
 
         if (empty($this->errors)) {
 
             $sql = 'UPDATE expenses_category_assigned_to_users
-                    SET name = :kategoria WHERE userID = :id AND expenseCategoryAssignedToUserID = :categoryID';
+                    SET name = :kategoria, expenseLimit = :expenseLimit WHERE userID = :id AND expenseCategoryAssignedToUserID = :categoryID';
 
             $db = static::getDB();
             $stmt = $db->prepare($sql);
@@ -114,10 +144,28 @@ class Expense extends \Core\Model
 			$stmt->bindValue(':categoryID', $this->categoryID, PDO::PARAM_INT);
             $stmt->bindValue(':kategoria', $this->categoryName, PDO::PARAM_STR);
 			
+			if (isset($this->expenseLimit)) {
+                $stmt->bindValue(':expenseLimit', strval($this->expenseLimit), PDO::PARAM_STR);
+            }else{
+				$stmt->bindValue(':expenseLimit', NULL, PDO::PARAM_STR);
+			}
+			
             return $stmt->execute();
         }
 
         return false;
+    }
+	
+	public function validateLimit()
+    {
+		if ($this->expenseLimit >0)
+		{
+			$this->expenseLimit  = -$this->expenseLimit;
+		}
+		if ($this->expenseLimit ==0)
+		{
+			unset($this->expenseLimit);
+		}
     }
 	
 	public function updatePaymentMethod()
@@ -162,7 +210,7 @@ class Expense extends \Core\Model
 			$this->expense = -$this->expense;
 		}
     }
-		
+			
 	public function validateCategory($ignore_id = null)
     {
         if ($this->categoryName == '') {

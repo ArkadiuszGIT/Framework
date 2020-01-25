@@ -24,6 +24,43 @@ class Settingsexpense extends Authenticated
 		
     }
 	
+	public function showLimitAction()
+    {
+			$this->category = Expense::findByCategoryName($_POST['categoryName']);
+			$this->categorySum = Expense::getUsersExpensesCategorySum($_POST['expenseDate'], $_POST['categoryName']);
+			$this->amount = $_POST['expense'];
+
+			$this->difference = $this->category->expenseLimit - $this->categorySum[0];
+			$this->difference = -$this->difference;
+			$this->expenseSum = $this->categorySum[0] - $this->amount;
+			
+		if ($this->category->expenseLimit != 0)
+		{	
+			if( $this->expenseSum  >= $this->category->expenseLimit)
+			{
+				View::renderTemplate('Expense/show_limit_success.html', [
+					'user' => $this->user,
+					'category' => $this->category,
+					'categorySum' => $this->categorySum,
+					'difference' => $this->difference,
+					'expenseSum' => $this->expenseSum
+				]);
+				
+			}else{
+				
+				View::renderTemplate('Expense/show_limit_danger.html', [
+					'user' => $this->user,
+					'category' => $this->category,
+					'categorySum' => $this->categorySum,
+					'difference' => $this->difference,
+					'expenseSum' => $this->expenseSum
+				]);
+			}
+		}else{			
+			View::renderTemplate('Expense/show_none_limit.html');		
+		}
+    }
+	
 	public function showPaymentMethodsAction()
     {
 		$this->payment = Expense::getUsersExpensePaymentMethod();
