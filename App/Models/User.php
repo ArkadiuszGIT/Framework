@@ -107,7 +107,16 @@ class User extends \Core\Model
         if ($this->name == '') {
             $this->errors[] = 'Podaj nazwę użytkownika!';
         }
-		if (static::loginExists($this->name, $this->id ?? null)) {
+		
+		if (strlen($this->name) < 3) {
+                $this->errors[] = 'Imię musi posiadać od 3 do 20 znaków!';
+        }
+			
+		if (strlen($this->name) > 20) {
+                $this->errors[] = 'Imię musi posiadać od 3 do 20 znaków!';
+        }
+		
+		if (static::loginExists($this->name, $this->userID ?? null)) {
             $this->errors[] = 'Użytkownik o tej nazwie jest już zarejestrowany!';
         }
 
@@ -115,7 +124,7 @@ class User extends \Core\Model
         if (filter_var($this->email, FILTER_VALIDATE_EMAIL) === false) {
             $this->errors[] = 'Podaj poprawny adres e-mail!';
         }
-        if (static::emailExists($this->email, $this->id ?? null)) {
+        if (static::emailExists($this->email, $this->userID ?? null)) {
             $this->errors[] = 'Email o tej nazwie jest już zarejestrowany!';
         }
 
@@ -139,17 +148,7 @@ class User extends \Core\Model
             }
 
         }
-		
-		$secret = "6LcXWr0UAAAAANebakfCBeWCgj-R25FwIg2E_Kuj";
-	
-		$check = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$secret.'&response='.$_POST['g-recaptcha-response']);
-	
-		$check = json_decode($check);
-		
-		if ($check->success==false)
-		{
-			$this->errors[] = 'Potwierdź, że nie jesteś botem!';
-		}		
+			
     }
 
     /**
@@ -502,15 +501,37 @@ class User extends \Core\Model
      *
      * @return boolean  True if the data was updated, false otherwise
      */
+	public function updatePassword($data)
+    {
+        $this->oldpassword = $data['oldPassword'];
+		
+		if ($this->authenticate($this->login, $this->oldpassword)) {
+				$this->password = $data['newPassword'];
+        }
+        $this->validatePassword();
+
+        if (empty($this->errors)) {
+
+            $sql = 'UPDATE users
+                    SET password_hash = :password_hash WHERE userID = :id';
+
+            $db = static::getDB();
+            $stmt = $db->prepare($sql);
+
+            $password_hash = password_hash($this->password, PASSWORD_DEFAULT);
+            $stmt->bindValue(':password_hash', $password_hash, PDO::PARAM_STR);
+            $stmt->bindValue(':id', $this->userID, PDO::PARAM_INT);
+
+            return $stmt->execute();
+        }
+
+        return false;
+    } 
+	 
     public function updateProfile($data)
     {
         $this->name = $data['name'];
         $this->email = $data['email'];
-
-        // Only validate and update the password if a value provided
-        if ($data['password'] != '') {
-            $this->password = $data['password'];
-        }
 
         $this->validate();
 
@@ -518,34 +539,47 @@ class User extends \Core\Model
 
             $sql = 'UPDATE users
                     SET login = :name,
-                        email = :email';
-
-            // Add password if it's set
-            if (isset($this->password)) {
-                $sql .= ', password_hash = :password_hash';
-            }
-
-            $sql .= "\nWHERE userID = :id";
-
+                        email = :email WHERE userID = :id';
 
             $db = static::getDB();
             $stmt = $db->prepare($sql);
 
             $stmt->bindValue(':name', $this->name, PDO::PARAM_STR);
             $stmt->bindValue(':email', $this->email, PDO::PARAM_STR);
-            $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
-
-            // Add password if it's set
-            if (isset($this->password)) {
-
-                $password_hash = password_hash($this->password, PASSWORD_DEFAULT);
-                $stmt->bindValue(':password_hash', $password_hash, PDO::PARAM_STR);
-
-            }
+            $stmt->bindValue(':id', $this->userID, PDO::PARAM_INT);
 
             return $stmt->execute();
         }
 
         return false;
+    }
+	
+	public function deleteUserFinances()
+    {
+        $sql = 'DELETE FROM incomes WHERE userID=:id;
+				DELETE FROM expenses WHERE userID=:id;';
+					
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':id', $this->userID, PDO::PARAM_INT);
+
+        return $stmt->execute();				
+    }
+	
+	public function deleteUserAccount()
+    {
+        $sql = 'DELETE FROM users WHERE userID=:id;
+				DELETE FROM remembered_logins WHERE user_id=:id;
+				DELETE FROM expenses_category_assigned_to_users WHERE userID=:id;
+				DELETE FROM incomes_category_assigned_to_users WHERE userID=:id;
+				DELETE FROM payment_methods_assigned_to_users WHERE userID=:id;
+				DELETE FROM incomes WHERE userID=:id;
+				DELETE FROM expenses WHERE userID=:id;';
+					
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':id', $this->userID, PDO::PARAM_INT);
+
+        return $stmt->execute();				
     }
 }

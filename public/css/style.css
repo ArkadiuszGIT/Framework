@@ -172,7 +172,11 @@ h2
 	outline: none;
 	margin-top: 10px !important;
 }
-
+input[type=number],
+input[type=date]
+{
+	width: 200px;
+}
 input[type=text],
 input[type=email],
 input[type=password]
@@ -204,8 +208,8 @@ input[type=date]:focus
 }
 
 #komentarz:focus,
-#kategoria:focus,
-#sposobPlatnosci:focus
+#categoryName:focus,
+#payment:focus
 {
 	-webkit-box-shadow: 0px 0px 10px 2px rgba(204,204,204,0.9);
 	-moz-box-shadow: 0px 0px 10px 2px rgba(204,204,204,0.9);
@@ -251,7 +255,7 @@ input[type=date]:focus
 
 .menuButton
 {
-	min-width: 250px;
+	min-width: 280px;
 	background-color: #0D533E;
 	font-size:20px;
 	color: white;
@@ -262,6 +266,12 @@ input[type=date]:focus
 	cursor: pointer;
 	letter-spacing: 2px;
 	outline: none;
+}
+
+.userSettingsButton
+{
+	min-width: 280px;
+	margin-top: 5px;
 }
 
 .g-recaptcha{
@@ -419,6 +429,16 @@ input:focus:-ms-input-placeholder
 	border: 2px solid #0D533E;
 }
 
+#incomeCategoryList,
+#expenseCategoryList,
+#paymentMethodsList,
+#userSettings
+{
+	padding-top: 10px;
+	margin: auto;
+	width: 280px;
+}
+
 .table-condensed{
   font-size: 15px;
 }
@@ -463,6 +483,13 @@ a:hover { color: #428C42; }
     border: 1px solid #ccc;
     padding: 6px;
 }
+
+input[type="text"]:disabled ,
+input[type="number"]:disabled 
+{
+	border: 2px solid grey;
+}
+
 /*
 .alert-success {
     background-color: #dff0d8;

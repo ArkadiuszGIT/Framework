@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+
+{% block title %}Income Categories{% endblock %}
+
+{% block footer %}
+	<script src="/js/application.js"></script>
+	
+	<script>
+			$(document).ready(function() {
+				
+					$(".editForm").each(function(){
+						var categoryID = $(this).find('#categoryID').val();
+						$(this).validate({
+							rules: {
+								categoryName: {
+									required: true,
+									minlength: 3,
+									maxlength: 20,
+									remote: {
+										url: '/Settingsincome/validate-IncomeCategory',
+										data: {
+											ignore_id: function() {
+												return categoryID;
+											}
+										}
+									}
+								}
+							},
+							messages: {
+								categoryName: {
+									required: 'Podaj nazwę kategorii!',
+									minlength: 'Nazwa kategorii powinna zawierać od 3 do 20 znaków!',
+									maxlength: 'Nazwa kategorii powinna zawierać od 3 do 20 znaków!',
+									remote: 'Kategoria o tej nazwie już istnieje!'
+								}
+							}
+						});
+					})	
+					
+					$("#addCategoryForm").validate({
+						rules: {
+							categoryName: {
+								required: true,
+								minlength: 3,
+								maxlength: 20,
+								remote: '/Settingsincome/validate-IncomeCategory'
+							}
+						},
+						messages: {
+							categoryName: {
+								required: 'Podaj nazwę kategorii!',
+								minlength: 'Nazwa kategorii powinna zawierać od 3 do 20 znaków!',
+								maxlength: 'Nazwa kategorii powinna zawierać od 3 do 20 znaków!',
+								remote: 'Kategoria o tej nazwie już istnieje!'
+							}
+						}
+					});
+					
+					$('form.ajax').on('submit', function(){
+						var that = $(this);
+						if(! that.valid()) return false;
+						else{
+							url = that.attr('action'),
+							type = that.attr('method'),
+							id = that.attr('id'),
+							data = {};
+							
+							that.find('[name]').each(function() {
+								var that = $(this),
+									name = that.attr('name'),
+									value = that.val();					
+								
+								data[name] = value;
+							}) ;
+							
+							$.ajax({
+								url: url,
+								type: type,
+								data: data,
+								success: function(response) {
+									$(that).load("/settingsincome/modalSuccess");
+								}
+							});
+							
+							return false;
+						}
+						
+					});		
+			});
+	</script>
+{% endblock %}	
+{% block body %}
+	<header><h2 style="text-align:left">Istniejące kategorie:</h2></header>
+	<main>
+
+		<div class="table-responsive">
+			<table class="table table-hover table-sm table-condensed">
+				<thead>
+				</thead>
+				<tbody>
+					{% if category is not empty %}
+						{% for item in category %}
+								<tr>
+									<td style="text-align:left"><input type="checkbox" name="{{item.name}}"/>{{item.name}}</td>
+									<td class="text-right">
+										<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editIncome{{loop.index}}" data-backdrop="static" data-keyboard="false"><i class="fa fa-pencil"  aria-hidden="true"></i></button>
+										
+										<div class="modal" id="editIncome{{loop.index}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+										  <div class="modal-dialog" role="document" >
+											<div class="modal-content">
+												  <div class="modal-header">
+													<h5 class="modal-title" id="exampleModalLabel">Edycja kategorii:</h5>
+												  </div>
+												  <div style="text-align:left"  class="modal-body">
+													<form action="/Settingsincome/updateIncomeCategory" class="ajax editForm"  method="post" >
+														<div class="form-group">
+															<div class="registrationInputWithIcon inputIconBg">
+																<input type = "text" class="form-control inputFinance" name="categoryName" id="categoryName"  value = "{{item.name}}"  require/>
+																<i class="fa fa-dollar"  aria-hidden="true"></i>
+															</div>
+														</div>
+														<div class="form-group">
+															<input type = "hidden" id = "categoryID"  name = "categoryID" value = "{{item.incomeCategoryAssignedToUserID}}" />
+														</div>
+													    <div class="modal-footer">
+														  <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+														  <button type="submit"  class="btn btn-primary" >Zapisz</button>
+													    </div>
+													</form>
+												  </div>
+											</div>
+										  </div>
+										</div>
+										
+										<button type="button" class="btn btn-danger" data-toggle="modal" data-target='#deleteIncome{{loop.index}}' data-backdrop="static" data-keyboard="false"><i class="fa fa-times"  aria-hidden="true"></i></button>
+										
+										<div class="modal" id='deleteIncome{{loop.index}}' tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+										  <div class="modal-dialog" role="document" >
+											<div class="modal-content">
+												  <div class="modal-header">
+													<h5 class="modal-title" id="deleteModalLabel">Potwierdzenie usunięcia kategorii:</h5>
+												  </div>
+												  <div class="modal-body">
+													<form action="/Settingsincome/deleteIncomeCategory" class="ajax deleteForm" method="post" >
+														<div class="form-group">
+															<p style="text-align:left">Czy na pewno chcesz usunąć kategorię: "{{item.name}}" ?</p> 
+															<input type = "hidden" id = "deleteIncomeCategory"  name = "deleteIncomeCategory" value = "{{item.name}}" />
+														</div>
+													    <div class="modal-footer">
+														  <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+														  <button type="submit" class="btn btn-danger"  >Usuń</button>
+													    </div>
+													</form>
+												  </div>
+											</div>
+										  </div>
+										</div>
+										
+									</td>
+								</tr>
+							{% endfor %}
+					{% endif %}
+				</tbody>
+			</table>
+			<button type="button" class="btn btn-success" data-toggle="modal" data-target = '#addIncomeCategory' data-backdrop="static" data-keyboard="false"><i class="fa fa-plus"  aria-hidden="true"></i>   Dodaj nową kategorię</button>
+			
+			<div class="modal" id="addIncomeCategory" tabindex="-1" role="dialog"  aria-labelledby="exampleModalLabel" aria-hidden="true">
+			  <div class="modal-dialog" role="document" >
+				<div class="modal-content">
+					  <div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Nowa kategoria:</h5>
+					  </div>
+					  <div style="text-align:left"  class="modal-body">
+						<form  action="/Settingsincome/addIncomeCategory" id="addCategoryForm"  class="ajax"  method="post" >
+							<div class="form-group">
+								<div class="registrationInputWithIcon inputIconBg">
+									<input type = "text" class="form-control inputFinance" id="categoryName"  name="categoryName" placeholder="kategoria" require/>
+									<i class="fa fa-dollar"  aria-hidden="true"></i>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+								<button type="submit"  class="btn btn-success" >Zapisz</button>
+							</div>
+						</form>
+					  </div>
+				</div>
+			  </div>
+			</div>
+			
+		</div>
+	
+	</main>
+
+{% endblock %}

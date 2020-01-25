@@ -3,12 +3,20 @@
 {% block title %}Expense{% endblock %}
 
 {% block footer %}
-    <script src="/js/hideShowPassword.min.js"></script>
-    <script src="/js/application.js"></script>
-	
+	<script src="/js/application.js"></script>
+
 	<script>
 			
 			data();
+			/*
+				var input = document.getElementById( 'date' ).value;
+				var d = new Date( input );
+
+				if ( !!d.valueOf() ) { // Valid date
+					year = d.getFullYear();
+					month = d.getMonth();
+				}
+			*/				
 			$(document).ready(function() {
 				/**
 				 * Validate the form
@@ -32,6 +40,26 @@
 						}
 					}
 				});
+
+				$('input#expense').keyup(function(){
+					var expense = $(this).val();
+					if(expense == 0) 
+					{
+						$("#expenseLimitMessage").hide();	
+						$('#limitInformation').html("<strong>Informacje o limicie:</strong> wpisz kwotę!");
+					}else{
+						$("#expenseLimitMessage").show();
+					}
+					var date = $("#date").val();
+					var categoryName = $("#categoryName").val();
+					$.post("/Settingsexpense/showLimit", {
+						expense: expense,
+						categoryName: categoryName,
+						expenseDate: date
+					}, function(data){
+						$("#expenseLimitMessage").html(data);
+					});									
+				});	
 			});		
 	</script>
 {% endblock %}	
@@ -67,7 +95,7 @@
 					</li>
 									
 					<li class="nav-item">
-						<a class="nav-link" href="#"><i class="fa fa-cog"  aria-hidden="true"></i>  Ustawienia </a>
+						<a class="nav-link" href="/settings/index"><i class="fa fa-cog"  aria-hidden="true"></i>  Ustawienia </a>
 					</li>				
 					
 				</ul>	
@@ -113,6 +141,11 @@
 									<h1>Dodaj wydatek</h1>
 									
 								</header>
+
+								<div id="limitInformation" style="font-size:15px;">
+								<strong>Informacje o limicie:</strong> wpisz kwotę!
+								</div>
+								<div id="expenseLimitMessage"></div>
 								<div class="row">
 									<div class="col">
 										<div class="form-group">
@@ -134,21 +167,26 @@
 									</div>
 								</div>
 								<div class="form-group">
-								<label for="payment">Sposób płatności</label>
-								<select name="payment" id="payment" class="form-control inputFinance">
-									{% if payment is not empty %}
-											{% for item in payment %}
-												<option value="{{item.name}}">{{item.name}}</option>
-											{% endfor %}
-									{% endif %}
-								</select>
-							</div>
+									<label for="payment">Sposób płatności</label>
+									<select name="payment" id="payment" class="form-control inputFinance">
+										{% if payment is not empty %}
+												{% for item in payment %}
+													<option value="{{item.name}}">{{item.name}}</option>
+												{% endfor %}
+										{% endif %}
+									</select>
+								</div>
 								<div class="form-group">
 									<label for="kategoria">Kategoria</label>
-									<select name="kategoria" id="kategoria" class="form-control inputFinance">
+									<select name="categoryName" id="categoryName" class="form-control inputFinance">
 										{% if category is not empty %}
 												{% for item in category %}
-													<option value="{{item.name}}">{{item.name}}</option>
+													<option value="{{item.name}}">
+														{{item.name}}
+														{% if item.expenseLimit is not empty %}
+															/ Limit: {{item.expenseLimit}}
+														{% endif %}											
+													</option>
 												{% endfor %}
 										{% endif %}
 									</select>

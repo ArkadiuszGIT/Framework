@@ -1,0 +1,291 @@
+{% extends "base.html" %}
+
+{% block title %}User Settings{% endblock %}
+
+{% block footer %}
+	<script src="/js/hideShowPassword.min.js"></script>
+	<script src="/js/application.js"></script>
+	
+	<script>
+			$(document).ready(function() {
+		
+					jQuery.validator.addMethod("validPassword", function(value, element) {
+							if (value != '') {
+								if (value.match(/.*[a-z]+.*/i) == null) {
+									return false;
+								}
+								if (value.match(/.*\d+.*/) == null) {
+									return false;
+								}
+							}
+
+							return true;
+						},
+						'Hasło musi zawierać conajmniej jedną literę i jeden numer'
+					);				
+					jQuery.validator.addMethod("validUserName", function(value, element) {
+       
+							if (value != '') {
+								return this.optional( element ) || /^[a-zA-Z0-9\.]+$/.test( value );
+							}
+						},
+						'Dozwolone są tylko litery, cyfry i kropki!'
+					);
+					
+					var userID = '{{ user.userID }}';
+					var login = '{{ user.login }}';
+						
+					$('#editDataForm').validate({
+						rules: {
+							name: {
+								required: true,
+								minlength: 3,
+								maxlength: 20,
+								validUserName: true,
+								remote: {
+									url: '/account/validate-login',
+									data: {
+										ignore_id: function() {
+											return userID;
+										}
+									}
+								}
+							},
+							email: {
+								required: true,
+								email: true,
+								remote: {
+									url: '/account/validate-email',
+									data: {
+										ignore_id: function() {
+											return userID;
+										}
+									}
+								}
+							}
+						},
+						messages: {
+							name: {
+								required: 'Podaj nazwę użytkownika!',
+								minlength: 'Nazwa użytkownika powinna zawierać od 3 do 20 znaków!',
+								maxlength: 'Nazwa użytkownika powinna zawierać od 3 do 20 znaków!',
+								remote: 'Użytkownik o tej nazwie jest już zarejestrowany!'
+							},
+							email: {
+								required: 'Podaj email!',
+								email: 'Podaj poprawny adres email!',
+								remote: 'Email o tej nazwie jest już zarejestrowany!'
+							}
+						}
+					});
+					
+					$('#editPasswordForm').validate({
+						rules: {
+							oldPassword: {
+								required: true,
+								remote: {
+									url: '/account/validate-password',
+									data: {
+										login: function() {
+											return login;
+										}
+									}
+								}
+							},						
+							newPassword: {
+								required: true,
+								minlength: 6,
+								maxlength: 20,
+								validPassword: true
+							}
+						},
+						messages: {
+							oldPassword: {
+								required: 'Podaj stare hasło!',
+								remote: 'Wprowadź poprawne stare hasło'
+							},
+							newPassword: {
+								required: 'Podaj nowe hasło!',
+								minlength: 'Hasło powinno zawierać od 6 do 20 znaków!',
+								maxlength: 'Hasło powinno zawierać od 6 do 20 znaków!'
+							}
+						}
+					});
+					
+					$('form.user').on('submit', function(){
+						var that = $(this);
+						if(! that.valid()) return false;
+						else{
+							url = that.attr('action'),
+							type = that.attr('method'),
+							id = that.attr('id'),
+							data = {};
+							
+							that.find('[name]').each(function() {
+								var that = $(this),
+									name = that.attr('name'),
+									value = that.val();					
+								
+								data[name] = value;
+							}) ;
+							
+							$.ajax({
+								url: url,
+								type: type,
+								data: data,
+								async: false, 
+								success: function() {
+									$(that).load("/settings/modalSuccess");
+								}
+							});
+							
+							return false;
+						}
+						
+					});	
+					
+					$('#oldPassword').hideShowPassword({
+						show: false,
+						innerToggle: 'focus',
+						toggle: {
+							verticalAlign: 'top',
+							styles: { 'margin-top': '1.5px' , 'margin-right': '1px'}    // add top margin to button
+						}
+					});
+					
+					$('#newPassword').hideShowPassword({
+						show: false,
+						innerToggle: 'focus',
+						toggle: {
+							verticalAlign: 'top',
+							styles: { 'margin-top': '1.5px' , 'margin-right': '1px'}    // add top margin to button
+						}
+					});
+			});
+	</script>
+{% endblock %}	
+{% block body %}
+	<header><h2 style="text-align:left">Istniejące kategorie:</h2></header>
+	<main>
+			<p style="text-align:left">
+			Login: {{ user.login }}
+			</br>
+			Email: {{ user.email }}
+			</p>
+						
+			<button type="button" class="btn btn-primary userSettingsButton" data-toggle="modal" data-target = '#editData' data-backdrop="static" data-keyboard="false"><i class="fa fa-pencil"  aria-hidden="true"></i>   Edytuj swoje dane</button>
+			
+			<div class="modal" id="editData" tabindex="-1" role="dialog"  aria-labelledby="exampleModalLabel" aria-hidden="true">
+			  <div class="modal-dialog" role="document" >
+				<div class="modal-content">
+					  <div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Edycja danych:</h5>
+					  </div>
+					  <div style="text-align:left"  class="modal-body">
+						<form  action="/Settings/updateData" id="editDataForm"  class="user"  method="post" >
+							<div class="form-group">
+								<div class="registrationInputWithIcon inputIconBg">
+									<input type="text" class="form-control inputRejestracja" value="{{ user.login }}" name="name" placeholder="login" required/>
+									<i class="fa fa-user"  aria-hidden="true"></i>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="registrationInputWithIcon inputIconBg">
+									<input type="email" class="form-control inputRejestracja" value="{{ user.email }}" name="email" placeholder="email" required/>
+									<i class="fa fa-envelope"  aria-hidden="true"></i>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+								<button type="submit"  class="btn btn-primary" >Zapisz</button>
+							</div>
+						</form>
+					  </div>
+				</div>
+			  </div>
+			</div>
+			
+			<button type="button" class="btn btn-primary userSettingsButton" data-toggle="modal" data-target = '#editPassword' data-backdrop="static" data-keyboard="false"><i class="fa fa-key"  aria-hidden="true"></i>   Zmień hasło</button>
+			
+			<div class="modal" id="editPassword" tabindex="-1" role="dialog"  aria-labelledby="exampleModalLabel" aria-hidden="true">
+			  <div class="modal-dialog" role="document" >
+				<div class="modal-content">
+					  <div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Edycja hasła:</h5>
+					  </div>
+					  <div style="text-align:left"  class="modal-body">
+					  Wprowadź:
+						<form  action="/Settings/updatePassword" id="editPasswordForm"  class="user"  method="post" >
+							<div class="form-group">
+								<div class="registrationInputWithIcon inputIconBg">
+									<input type="password" class="form-control inputRejestracja"" id="oldPassword" name="oldPassword" placeholder="stare hasło" required/>
+									<i class="fa fa-key"  aria-hidden="true"></i>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="registrationInputWithIcon inputIconBg">
+									<input type="password" class="form-control inputRejestracja"" id="newPassword" name="newPassword" placeholder="nowe hasło" required/>
+									<i class="fa fa-key"  aria-hidden="true"></i>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+								<button type="submit"  class="btn btn-primary" >Zapisz</button>
+							</div>
+						</form>
+					  </div>
+				</div>
+			  </div>
+			</div>
+			
+			<button type="button" class="btn btn-danger userSettingsButton" data-toggle="modal" data-target='#deleteFinances' data-backdrop="static" data-keyboard="false"><i class="fa fa-trash"  aria-hidden="true"></i>   Usuń wszystkie przychody i wydatki</button>
+										
+			<div class="modal" id='deleteFinances' tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+			  <div class="modal-dialog" role="document" >
+				<div class="modal-content">
+					  <div class="modal-header">
+						<h5 class="modal-title" id="deleteModalLabel">Potwierdzenie usunięcia kategorii:</h5>
+					  </div>
+					  <div class="modal-body">
+						<form action="/Settings/deleteFinances" class="user deleteFinancesForm" method="post" >
+							<div class="form-group" style="text-align:left">
+								<p>Czy na pewno chcesz usunąć wszystkie przychody i wydatki ?</p> 
+								<input type="checkbox" id="checkDropFinances" name="checkDropFinances" class="checkme" onchange="document.getElementById('dropFinances').disabled = !this.checked;"/> Tak, chcę usunąć!
+							</div>
+							<div class="modal-footer">
+							  <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+							  <button type="submit" id="dropFinances" class="btn btn-danger"disabled>Usuń</button>
+							</div>
+						</form>
+					  </div>
+				</div>
+			  </div>
+			</div>
+			
+			<button type="button" class="btn btn-danger userSettingsButton" data-toggle="modal" data-target='#deleteAccount' data-backdrop="static" data-keyboard="false"><i class="fa fa-times"  aria-hidden="true"></i>   Usuń konto</button>
+										
+			<div class="modal" id='deleteAccount' tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+			  <div class="modal-dialog" role="document" >
+				<div class="modal-content">
+					  <div class="modal-header">
+						<h5 class="modal-title" id="deleteModalLabel">Potwierdzenie usunięcia kategorii:</h5>
+					  </div>
+					  <div class="modal-body">
+						<form action="/Settings/deleteAccount" class="deleteAccountForm" method="post" >
+							<div class="form-group" style="text-align:left">
+								<p>Czy na pewno chcesz usunąć konto ?</p>
+								<input type="checkbox" id="checkDropAccount" name="checkDropAccount" class="checkme" onchange="document.getElementById('dropAccount').disabled = !this.checked;"/> Tak, chcę usunąć!
+							</div>
+							<div class="modal-footer">
+							  <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+							  <button type="submit" id="dropAccount" class="btn btn-danger" disabled>Usuń</button>
+							</div>
+						</form>
+					  </div>
+				</div>
+			  </div>
+			</div>
+
+	</main>
+
+{% endblock %}

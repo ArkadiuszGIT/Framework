@@ -1,21 +1,4 @@
 
-$.validator.addMethod('validPassword',
-    function(value, element, param) {
-
-        if (value != '') {
-            if (value.match(/.*[a-z]+.*/i) == null) {
-                return false;
-            }
-            if (value.match(/.*\d+.*/) == null) {
-                return false;
-            }
-        }
-
-        return true;
-    },
-    'Hasło musi zawierać conajmniej jedną literę i jeden numer'
-);
-
 Number.prototype.round = function(miejsc)
 {
 	return +(Math.round(this+"e+"+miejsc) + "e-"+miejsc);
@@ -38,6 +21,7 @@ function data()
 }
 
 var myMap = new Map();
+myMap.set(0, "Grudzień");
 myMap.set(1, "Styczeń");
 myMap.set(2, "Luty");
 myMap.set(3, "Marzec");
@@ -66,6 +50,8 @@ function dataPreviousBilans()
 		
 		var miesiac = dzisiaj.getMonth();
 		var rok = dzisiaj.getFullYear();
+		if (miesiac == 0)  rok = rok -1;
+
 		
 		$('#h1').html("Bilans z " + myMap.get(miesiac) + " " + rok);
 }

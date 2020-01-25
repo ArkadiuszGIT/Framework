@@ -34,5 +34,17 @@ class Account extends \Core\Controller
         header('Content-Type: application/json');
         echo json_encode($is_valid);
     }
+	
+	public function validatePasswordAction()
+    {
+		if (User::authenticate($_GET['login'], $_GET['oldPassword'])){
+				$is_valid = true;
+		}else{
+				$is_valid = false;
+		}
+        
+        header('Content-Type: application/json');
+        echo json_encode($is_valid);
+    }
 
 }
