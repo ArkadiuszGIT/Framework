@@ -8,7 +8,7 @@
 	<script>
 			$(document).ready(function() {
 				
-					$(".editForm").each(function(){
+					$(".editIncomeForm").each(function(){
 						var categoryID = $(this).find('#categoryID').val();
 						$(this).validate({
 							rules: {
@@ -33,11 +33,21 @@
 									maxlength: 'Nazwa kategorii powinna zawierać od 3 do 20 znaków!',
 									remote: 'Kategoria o tej nazwie już istnieje!'
 								}
+							},
+							submitHandler: function(form) {
+								$.ajax({
+									url: form.action,
+									type: form.method,
+									data:	$(form).serialize(),
+									success: function(response) {
+										$(form).load("/Settingsincome/modalSuccess");
+									}
+								});					
 							}
 						});
 					})	
 					
-					$("#addCategoryForm").validate({
+					$("#addIncomeCategoryForm").validate({
 						rules: {
 							categoryName: {
 								required: true,
@@ -53,39 +63,35 @@
 								maxlength: 'Nazwa kategorii powinna zawierać od 3 do 20 znaków!',
 								remote: 'Kategoria o tej nazwie już istnieje!'
 							}
+						},
+						submitHandler: function(form) {
+							$.ajax({
+								url: form.action,
+								type: form.method,
+								data:	$(form).serialize(),
+								success: function(response) {
+									$(form).load("/Settingsincome/modalSuccess");
+								}
+							});					
 						}
 					});
 					
-					$('form.ajax').on('submit', function(){
+					$('form#deleteIncomeForm').on('submit', function(){
 						var that = $(this);
-						if(! that.valid()) return false;
-						else{
-							url = that.attr('action'),
-							type = that.attr('method'),
-							id = that.attr('id'),
-							data = {};
-							
-							that.find('[name]').each(function() {
-								var that = $(this),
-									name = that.attr('name'),
-									value = that.val();					
-								
-								data[name] = value;
-							}) ;
-							
-							$.ajax({
-								url: url,
-								type: type,
-								data: data,
-								async: false, 
-								success: function(response) {
-									$(that).load("/settingsincome/modalSuccess");
-								}
-							});
-							
-							return false;
-						}
-						
+						url = that.attr('action'),
+						type = that.attr('method'),
+						id = that.attr('id'),
+					
+						$.ajax({
+							url: url,
+							type: type,
+							data:	$(that).serialize(),
+							success: function(response) {
+								$(that).load("/Settingsincome/modalSuccess");
+							}
+						});
+
+						return false;											
 					});		
 			});
 	</script>
@@ -114,7 +120,7 @@
 													<h5 class="modal-title" id="exampleModalLabel">Edycja kategorii:</h5>
 												  </div>
 												  <div style="text-align:left"  class="modal-body">
-													<form action="/Settingsincome/updateIncomeCategory" class="ajax editForm"  method="post" >
+													<form action="/Settingsincome/updateIncomeCategory" class="editIncomeForm"  method="post" >
 														<div class="form-group">
 															<div class="registrationInputWithIcon inputIconBg">
 																<input type = "text" class="form-control inputFinance" name="categoryName" id="categoryName"  value = "{{item.name}}"  require/>
@@ -143,7 +149,7 @@
 													<h5 class="modal-title" id="deleteModalLabel">Potwierdzenie usunięcia kategorii:</h5>
 												  </div>
 												  <div class="modal-body">
-													<form action="/Settingsincome/deleteIncomeCategory" class="ajax deleteForm" method="post" >
+													<form action="/Settingsincome/deleteIncomeCategory" id="deleteIncomeForm" method="post" >
 														<div class="form-group">
 															<p style="text-align:left">Czy na pewno chcesz usunąć kategorię: "{{item.name}}" ?</p> 
 															<input type = "hidden" id = "deleteIncomeCategory"  name = "deleteIncomeCategory" value = "{{item.name}}" />
@@ -174,7 +180,7 @@
 						<h5 class="modal-title" id="exampleModalLabel">Nowa kategoria:</h5>
 					  </div>
 					  <div style="text-align:left"  class="modal-body">
-						<form  action="/Settingsincome/addIncomeCategory" id="addCategoryForm"  class="ajax"  method="post" >
+						<form  action="/Settingsincome/addIncomeCategory" id="addIncomeCategoryForm"  method="post" >
 							<div class="form-group">
 								<div class="registrationInputWithIcon inputIconBg">
 									<input type = "text" class="form-control inputFinance" id="categoryName"  name="categoryName" placeholder="kategoria" require/>

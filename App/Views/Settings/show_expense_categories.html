@@ -44,6 +44,16 @@
 									number: 'Wpisz liczbę!',
 									notEqual: 'Limit musi być różny od 0!'
 								}	
+							},
+							submitHandler: function(form) {
+								$.ajax({
+									url: form.action,
+									type: form.method,
+									data:	$(form).serialize(),
+									success: function(response) {
+										$(form).load("/Settingsexpense/modalSuccess");
+									}
+								});					
 							}
 						});
 					})	
@@ -64,40 +74,36 @@
 								maxlength: 'Nazwa kategorii powinna zawierać od 3 do 20 znaków!',
 								remote: 'Kategoria o tej nazwie już istnieje!'
 							}
+						},
+						submitHandler: function(form) {
+							$.ajax({
+								url: form.action,
+								type: form.method,
+								data:	$(form).serialize(),
+								success: function(response) {
+									$(form).load("/Settingsexpense/modalSuccess");
+								}
+							});					
 						}
 					});
 					
-					$('form.expense').on('submit', function(){
+					$('form#deleteExpenseForm').on('submit', function(){
 						var that = $(this);
-						if(! that.valid()) return false;
-						else{
-							url = that.attr('action'),
-							type = that.attr('method'),
-							id = that.attr('id'),
-							data = {};
-							
-							that.find('[name]').each(function() {
-								var that = $(this),
-									name = that.attr('name'),
-									value = that.val();					
-								
-								data[name] = value;
-							}) ;
-							
-							$.ajax({
-								url: url,
-								type: type,
-								data: data,
-								async: false, 
-								success: function(response) {
-									$(that).load("/settingsexpense/modalSuccess");
-								}
-							});
-							
-							return false;
-						}
-						
-					});		
+						url = that.attr('action'),
+						type = that.attr('method'),
+						id = that.attr('id'),
+					
+						$.ajax({
+							url: url,
+							type: type,
+							data:	$(that).serialize(),
+							success: function(response) {
+								$(that).load("/Settingsexpense/modalSuccess");
+							}
+						});
+
+						return false;											
+					});	
 			});
 	</script>
 {% endblock %}	
@@ -129,11 +135,11 @@
 													<h5 class="modal-title" id="exampleModalLabel">Edycja kategorii:</h5>
 												  </div>
 												  <div style="text-align:left"  class="modal-body">
-													<form action="/Settingsexpense/updateExpenseCategory" class="expense editExpenseForm"  method="post" >
+													<form action="/Settingsexpense/updateExpenseCategory" class="editExpenseForm"  method="post" >
 														<div class="form-group">
 															<div class="registrationInputWithIcon inputIconBg">
 																<input type = "text" class="form-control inputFinance" name="categoryName" id="categoryName"  value = "{{item.name}}"  require/>
-																<i class="fa fa-dollar"  aria-hidden="true"></i>
+																<i class="fa fa-shopping-bag"  aria-hidden="true"></i>
 															</div>
 														</div>
 														<div class="form-group">
@@ -142,8 +148,8 @@
 														<div class="form-group">
 															<input type="checkbox" id="checkme" name="checkme" class="checkme" onchange="document.getElementById('expenseLimit{{loop.index}}').disabled = !this.checked;"/>Miesięczny limit
 															<div class="registrationInputWithIcon inputIconBg">
-																<input type="number" id="expenseLimit{{loop.index}}" name="expenseLimit" step="0.01" class="form-control inputFinance expenseLimit"  value="{{item.monthLimit}}" disabled>
-																<i class="fa fa-dollar"  aria-hidden="true"></i>
+																<input type="number" id="expenseLimit{{loop.index}}" name="expenseLimit" step="0.01" class="form-control inputFinance expenseLimit"  value="{{item.expenseLimit}}" disabled>
+																<i class="fa fa-shopping-bag"  aria-hidden="true"></i>
 															</div>
 														 </div>
 													    <div class="modal-footer">
@@ -165,7 +171,7 @@
 													<h5 class="modal-title" id="deleteModalLabel">Potwierdzenie usunięcia kategorii:</h5>
 												  </div>
 												  <div class="modal-body">
-													<form action="/Settingsexpense/deleteExpenseCategory" class="expense deleteForm" method="post" >
+													<form action="/Settingsexpense/deleteExpenseCategory" id="deleteExpenseForm" method="post" >
 														<div class="form-group">
 															<p style="text-align:left">Czy na pewno chcesz usunąć kategorię: "{{item.name}}" ?</p> 
 															<input type = "hidden" id = "deleteExpenseCategory"  name = "deleteExpenseCategory" value = "{{item.name}}" />
@@ -196,11 +202,11 @@
 						<h5 class="modal-title" id="exampleModalLabel">Nowa kategoria:</h5>
 					  </div>
 					  <div style="text-align:left"  class="modal-body">
-						<form  action="/Settingsexpense/addExpenseCategory" id="addExpenseCategoryForm"  class="expense"  method="post" >
+						<form  action="/Settingsexpense/addExpenseCategory" id="addExpenseCategoryForm" method="post" >
 							<div class="form-group">
 								<div class="registrationInputWithIcon inputIconBg">
 									<input type = "text" class="form-control inputFinance" id="categoryName"  name="categoryName" placeholder="kategoria" require/>
-									<i class="fa fa-dollar"  aria-hidden="true"></i>
+									<i class="fa fa-shopping-bag"  aria-hidden="true"></i>
 								</div>
 							</div>
 							<div class="modal-footer">
