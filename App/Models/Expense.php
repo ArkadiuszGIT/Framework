@@ -314,9 +314,9 @@ class Expense extends \Core\Model
 		return $paymentMethod;
     }
 	
-	public static function deleteUserCategory($categoryName)
+	public static function getExpenseCategoryIdForDelete($categoryName)
     {
-        $sql = 'DELETE FROM expenses_category_assigned_to_users WHERE name=:kategoria
+        $sql = 'SELECT * FROM expenses_category_assigned_to_users WHERE name=:kategoria
 					AND userID=:id';
 					
         $db = static::getDB();
@@ -324,18 +324,61 @@ class Expense extends \Core\Model
         $stmt->bindValue(':id', $_SESSION['user_id'], PDO::PARAM_INT);
 		$stmt->bindValue(':kategoria', $categoryName, PDO::PARAM_STR);
 
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+
+        $stmt->execute();
+		
+		return $stmt->fetch();
+		
+    }	
+	public static function deleteUserCategory($categoryName)
+    {
+		$expenseCategory = Expense::getExpenseCategoryIdForDelete($categoryName);
+		
+        $sql = 'DELETE FROM expenses_category_assigned_to_users WHERE name=:kategoria AND userID=:id;
+				  UPDATE expenses AS exp INNER JOIN expenses_category_assigned_to_users AS expcat ON exp.userID = expcat.userID SET exp.expenseCategoryAssignedToUserID = expcat.expenseCategoryAssignedToUserID WHERE exp.userID=:id AND expcat.name="Inne" 
+				  AND exp.expenseCategoryAssignedToUserID=:categoryID;';
+					
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':id', $_SESSION['user_id'], PDO::PARAM_INT);
+		$stmt->bindValue(':kategoria', $categoryName, PDO::PARAM_STR);
+		$stmt->bindValue(':categoryID', $expenseCategory->expenseCategoryAssignedToUserID, PDO::PARAM_INT);
+
         return $stmt->execute();				
     }
 	
-	public static function deleteUserPaymentMethod($methodName)
+	public static function getExpensePaymentIdForDelete($methodName)
     {
-        $sql = 'DELETE FROM payment_methods_assigned_to_users WHERE name=:metoda
+        $sql = 'SELECT * FROM payment_methods_assigned_to_users WHERE name=:payment
 					AND userID=:id';
 					
         $db = static::getDB();
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':id', $_SESSION['user_id'], PDO::PARAM_INT);
+		$stmt->bindValue(':payment', $methodName, PDO::PARAM_STR);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+
+        $stmt->execute();
+		
+		return $stmt->fetch();		
+    }
+	
+	public static function deleteUserPaymentMethod($methodName)
+    {		
+		$paymentMethod =  Expense::getExpensePaymentIdForDelete($methodName);
+		
+        $sql = 'DELETE FROM payment_methods_assigned_to_users WHERE name=:metoda AND userID=:id;
+				UPDATE expenses AS exp INNER JOIN payment_methods_assigned_to_users AS paymet ON exp.userID = paymet.userID SET exp.paymentMethodAssignedToUserID = paymet.paymentMethodAssignedToUserID WHERE exp.userID=:id AND paymet.name="Inne" 
+				  AND exp.paymentMethodAssignedToUserID=:paymentID;';
+				   
+					
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':id', $_SESSION['user_id'], PDO::PARAM_INT);
 		$stmt->bindValue(':metoda', $methodName, PDO::PARAM_STR);
+		$stmt->bindValue(':paymentID', $paymentMethod->paymentMethodAssignedToUserID, PDO::PARAM_INT);
 
         return $stmt->execute();				
     }

@@ -112,6 +112,7 @@
 				<tbody>
 					{% if category is not empty %}
 						{% for item in category %}
+							{% if item.name !="Inne" %}
 								<tr>
 									<td style="text-align:left"><input type="checkbox" name="{{item.name}}"/>{{item.name}}</br>
 											{% if item.expenseLimit is not empty %}
@@ -181,7 +182,8 @@
 										
 									</td>
 								</tr>
-							{% endfor %}
+							{% endif %}	
+						{% endfor %}
 					{% endif %}
 				</tbody>
 			</table>
