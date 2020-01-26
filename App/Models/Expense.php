@@ -38,7 +38,7 @@ class Expense extends \Core\Model
 
         if (empty($this->errors)) {
 
-            $sql = 'INSERT INTO expenses_category_assigned_to_users VALUES (NULL, :id, :kategoria )';
+            $sql = 'INSERT INTO expenses_category_assigned_to_users VALUES (NULL, :id, :kategoria, NULL )';
 
             $db = static::getDB();
             $stmt = $db->prepare($sql);
