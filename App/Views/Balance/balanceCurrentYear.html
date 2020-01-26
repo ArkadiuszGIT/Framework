@@ -91,7 +91,11 @@
 		</nav>
 		
 	</header>
-	
+	{% for message in flash_messages %}
+		<div class="alert alert-success">
+			{{ message.body }}
+		</div>
+	{% endfor %}
 	<main class="balance">
 	
 		<article>
@@ -219,8 +223,29 @@
 														<td>{{ item.name }}</td>
 														<td>{{ item.incomeComment }}</td>
 														<td class="text-right">
-															<button type="button" class="btn btn-primary" onClick=""><i class="fa fa-pencil"  aria-hidden="true"></i></button>
-															<button type="button" class="btn btn-danger" onClick=""><i class="fa fa-times"  aria-hidden="true"></i></button>
+															<button type="button" class="btn btn-danger" data-toggle="modal" data-target='#deleteIncome{{loop.index}}' data-backdrop="static" data-keyboard="false"><i class="fa fa-times"  aria-hidden="true"></i></button>
+										
+															<div class="modal" id='deleteIncome{{loop.index}}' tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+															  <div class="modal-dialog" role="document" >
+																<div class="modal-content">
+																	  <div class="modal-header">
+																		<h5 class="modal-title" id="deleteModalLabel">Potwierdzenie usunięcia przychodu:</h5>
+																	  </div>
+																	  <div class="modal-body">
+																		<form action="/Showbalancecurrentyear/deleteIncome" method="post" >
+																			<div class="form-group">
+																				<p style="text-align:left">Czy na pewno chcesz usunąć przychód: {{item.amount}} zł z dnia: {{item.dateOfIncome}}?</p> 
+																				<input type = "hidden" id = "incomeID"  name = "incomeID" value = "{{item.incomeID}}" />
+																			</div>
+																			<div class="modal-footer">
+																			  <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+																			  <button type="submit" class="btn btn-danger"  >Usuń</button>
+																			</div>
+																		</form>
+																	  </div>
+																</div>
+															  </div>
+															</div>
 														</td>
 													</tr>
 												{% endfor %}
@@ -292,8 +317,29 @@
 														<td>{{ item.name }}</td>
 														<td>{{ item.expenseComment }}</td>
 														<td class="text-right">
-															<button type="button" class="btn btn-primary" onClick=""><i class="fa fa-pencil"  aria-hidden="true"></i></button>
-															<button type="button" class="btn btn-danger" onClick=""><i class="fa fa-times"  aria-hidden="true"></i></button>
+															<button type="button" class="btn btn-danger" data-toggle="modal" data-target='#deleteExpense{{loop.index}}' data-backdrop="static" data-keyboard="false"><i class="fa fa-times"  aria-hidden="true"></i></button>
+										
+															<div class="modal" id='deleteExpense{{loop.index}}' tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+															  <div class="modal-dialog" role="document" >
+																<div class="modal-content">
+																	  <div class="modal-header">
+																		<h5 class="modal-title" id="deleteModalLabel">Potwierdzenie usunięcia wydatku:</h5>
+																	  </div>
+																	  <div class="modal-body">
+																		<form action="/Showbalancecurrentyear/deleteExpense" method="post" >
+																			<div class="form-group">
+																				<p style="text-align:left">Czy na pewno chcesz usunąć wydatek: {{item.amount}} zł z dnia: {{item.dateOfExpense}}?</p> 
+																				<input type = "hidden" id = "expenseID"  name = "expenseID" value = "{{item.expenseID}}" />
+																			</div>
+																			<div class="modal-footer">
+																			  <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+																			  <button type="submit" class="btn btn-danger"  >Usuń</button>
+																			</div>
+																		</form>
+																	  </div>
+																</div>
+															  </div>
+															</div>
 														</td>
 													</tr>
 												{% endfor %}

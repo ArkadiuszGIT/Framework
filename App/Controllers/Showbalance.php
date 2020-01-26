@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use \Core\View;
 use \App\Models\Balance;
+use \App\Flash;
 
 /**
  * Items controller (example)
@@ -38,5 +39,39 @@ class Showbalance extends Authenticated
             'user' => $this->user,
         ]);
     }
+	
+	public function deleteIncomeAction()
+    {	
+		if (Balance::deleteIncome($_POST['incomeID'])) {
+			
+			Flash::addMessage('Sukces! Przychód został poprawnie usunięty!');
+
+			$this->redirect('/showbalance/balance');			
+
+        } else {
+			
+			Flash::addMessage('Niestety! Nie udało się usunąć przychodu', Flash::WARNING);		
+			
+            $this->redirect('/showbalance/balance');
+        }		
+    }
+	
+	public function deleteExpenseAction()
+    {	
+		if (Balance::deleteExpense($_POST['expenseID'])) {
+			
+			Flash::addMessage('Sukces! Wydatek został poprawnie usunięty!');	
+
+			$this->redirect('/showbalance/balance');
+
+        } else {
+			
+			Flash::addMessage('Niestety! Nie udało się usunąć wydatku', Flash::WARNING);		
+			
+            $this->redirect('/showbalance/balance');
+        }		
+    }
+	
+
 
 }
