@@ -35,7 +35,11 @@
               */
             $('#inputPassword').hideShowPassword({
                 show: false,
-                innerToggle: 'focus'
+                innerToggle: 'focus',
+				toggle: {
+					verticalAlign: 'top',
+					styles: { 'margin-top': '1.5px' , 'margin-right': '1px'}    // add top margin to button
+				}
             });
         });
     </script>

@@ -36,7 +36,7 @@ class Settingsincome extends Authenticated
 			
 			Flash::addMessage('Niestety! Nie udało się usunąć kategorii', Flash::WARNING);		
 			
-            View::renderTemplate('settings/index.html', [
+            View::renderTemplate('Settings/index.html', [
                 'user' => $this->user
             ]);
 
@@ -64,7 +64,7 @@ class Settingsincome extends Authenticated
 			
 			Flash::addMessage('Niestety! Nie udało się dodać kategorii', Flash::WARNING);		
 			
-            View::renderTemplate('settings/index.html', [
+            View::renderTemplate('Settings/index.html', [
 				'income' => $income,
                 'user' => $this->user
             ]);
@@ -84,7 +84,7 @@ class Settingsincome extends Authenticated
 			
 			Flash::addMessage('Niestety! Nie udało się edytować kategorii', Flash::WARNING);		
 			
-            View::renderTemplate('settings/index.html', [
+            View::renderTemplate('Settings/index.html', [
                 'income' => $income,
                 'user' => $this->user
             ]);
