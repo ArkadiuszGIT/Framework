@@ -149,8 +149,7 @@ class Income extends \Core\Model
 
         $stmt->execute();
 		
-		return $stmt->fetch();
-		
+		return $stmt->fetch();	
     }
 	
 	public static function getUsersIncomeCategory()
@@ -173,15 +172,37 @@ class Income extends \Core\Model
 		}*/	
     }
 	
-	public static function deleteUserCategory($categoryName)
+	public static function getIncomeCategoryIdForDelete($categoryName)
     {
-        $sql = 'DELETE FROM incomes_category_assigned_to_users WHERE name=:kategoria
+		
+        $sql = 'SELECT * FROM incomes_category_assigned_to_users WHERE name=:kategoria
 					AND userID=:id';
 					
         $db = static::getDB();
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':id', $_SESSION['user_id'], PDO::PARAM_INT);
 		$stmt->bindValue(':kategoria', $categoryName, PDO::PARAM_STR);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+
+        $stmt->execute();
+		
+		return $stmt->fetch();	
+    }
+	
+	public static function deleteUserCategory($categoryName)
+    {
+		$incomeCategory =  Income::getIncomeCategoryIdForDelete($categoryName);
+		
+        $sql = 'DELETE FROM incomes_category_assigned_to_users WHERE name=:kategoria AND userID=:id;
+				  UPDATE incomes AS inc INNER JOIN incomes_category_assigned_to_users AS inccat ON inc.userID = inccat.userID SET inc.incomeCategoryAssignedToUserID = inccat.incomeCategoryAssignedToUserID WHERE inc.userID=:id AND inccat.name="Inne" 
+				  AND inc.incomeCategoryAssignedToUserID=:categoryID;';
+					
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':id', $_SESSION['user_id'], PDO::PARAM_INT);
+		$stmt->bindValue(':kategoria', $categoryName, PDO::PARAM_STR);
+		$stmt->bindValue(':categoryID', $incomeCategory->incomeCategoryAssignedToUserID, PDO::PARAM_INT);
 
         return $stmt->execute();				
     }
