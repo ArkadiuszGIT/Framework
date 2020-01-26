@@ -38,7 +38,7 @@ class Settingsexpense extends Authenticated
 		{	
 			if( $this->expenseSum  >= $this->category->expenseLimit)
 			{
-				View::renderTemplate('Expense/show_limit_success.html', [
+				View::renderTemplate('expense/show_limit_success.html', [
 					'user' => $this->user,
 					'category' => $this->category,
 					'categorySum' => $this->categorySum,
@@ -48,7 +48,7 @@ class Settingsexpense extends Authenticated
 				
 			}else{
 				
-				View::renderTemplate('Expense/show_limit_danger.html', [
+				View::renderTemplate('expense/show_limit_danger.html', [
 					'user' => $this->user,
 					'category' => $this->category,
 					'categorySum' => $this->categorySum,
@@ -57,7 +57,7 @@ class Settingsexpense extends Authenticated
 				]);
 			}
 		}else{			
-			View::renderTemplate('Expense/show_none_limit.html');		
+			View::renderTemplate('expense/show_none_limit.html');		
 		}
     }
 	
@@ -83,7 +83,7 @@ class Settingsexpense extends Authenticated
 			
 			Flash::addMessage('Niestety! Nie udało się usunąć kategorii', Flash::WARNING);		
 			
-            View::renderTemplate('settings/index.html', [
+            View::renderTemplate('Settings/index.html', [
                 'user' => $this->user
             ]);
 
@@ -111,7 +111,7 @@ class Settingsexpense extends Authenticated
 			
 			Flash::addMessage('Niestety! Nie udało się dodać kategorii', Flash::WARNING);		
 			
-            View::renderTemplate('settings/index.html', [
+            View::renderTemplate('Settings/index.html', [
 				'expense' => $expense,
                 'user' => $this->user
             ]);
@@ -131,7 +131,7 @@ class Settingsexpense extends Authenticated
 			
 			Flash::addMessage('Niestety! Nie udało się edytować kategorii', Flash::WARNING);		
 			
-            View::renderTemplate('settings/index.html', [
+            View::renderTemplate('Settings/index.html', [
                 'expense' => $expense,
                 'user' => $this->user
             ]);
@@ -155,7 +155,7 @@ class Settingsexpense extends Authenticated
 			
 			Flash::addMessage('Niestety! Nie udało się usunąć metody płatności', Flash::WARNING);		
 			
-            View::renderTemplate('settings/index.html', [
+            View::renderTemplate('Settings/index.html', [
                 'user' => $this->user
             ]);
 
@@ -183,7 +183,7 @@ class Settingsexpense extends Authenticated
 			
 			Flash::addMessage('Niestety! Nie udało się dodać metody płatności', Flash::WARNING);		
 			
-            View::renderTemplate('settings/index.html', [
+            View::renderTemplate('Settings/index.html', [
 				'expense' => $expense,
                 'user' => $this->user
             ]);
@@ -203,7 +203,7 @@ class Settingsexpense extends Authenticated
 			
 			Flash::addMessage('Niestety! Nie udało się edytować metody płatności', Flash::WARNING);		
 			
-            View::renderTemplate('settings/index.html', [
+            View::renderTemplate('Settings/index.html', [
                 'expense' => $expense,
                 'user' => $this->user
             ]);

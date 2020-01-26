@@ -33,6 +33,16 @@
 									maxlength: 'Nazwa metody płatności powinna zawierać od 3 do 20 znaków!',
 									remote: 'Metoda płatności o tej nazwie już istnieje!'
 								}
+							},
+							submitHandler: function(form) {
+								$.ajax({
+									url: form.action,
+									type: form.method,
+									data:	$(form).serialize(),
+									success: function(response) {
+										$(form).load("/Settingsexpense/modalPaymentSuccess");
+									}
+								});					
 							}
 						});
 					})	
@@ -53,37 +63,35 @@
 								maxlength: 'Nazwa metody płatności powinna zawierać od 3 do 20 znaków!',
 								remote: 'Metoda płatności o tej nazwie już istnieje!'
 							}
+						},
+						submitHandler: function(form) {
+							$.ajax({
+								url: form.action,
+								type: form.method,
+								data:	$(form).serialize(),
+								success: function(response) {
+									$(form).load("/Settingsexpense/modalPaymentSuccess");
+								}
+							});					
 						}
 					});
 					
-					$('form.payment').on('submit', function(){
+					$('form#deleteMethodForm').on('submit', function(){
 						var that = $(this);
-						if(! that.valid()) return false;
-						else{
-							url = that.attr('action'),
-							type = that.attr('method'),
-							id = that.attr('id'),
-							data = {};
-							
-							that.find('[name]').each(function() {
-								var that = $(this),
-									name = that.attr('name'),
-									value = that.val();					
-								
-								data[name] = value;
-							}) ;
-							
-							$.ajax({
-								url: url,
-								type: type,
-								data: data,
-								async: false, 
-								success: function(response) {
-									$(that).load("/settingsexpense/modalPaymentSuccess");
-								}
-							});							
-							return false;
-						}						
+						url = that.attr('action'),
+						type = that.attr('method'),
+						id = that.attr('id'),
+					
+						$.ajax({
+							url: url,
+							type: type,
+							data:	$(that).serialize(),
+							success: function(response) {
+								$(that).load("/Settingsexpense/modalPaymentSuccess");
+							}
+						});
+
+						return false;											
 					});		
 			});
 	</script>
@@ -112,11 +120,11 @@
 													<h5 class="modal-title" id="exampleModalLabel">Edycja metody płatności:</h5>
 												  </div>
 												  <div style="text-align:left"  class="modal-body">
-													<form action="/Settingsexpense/updatePaymentMethod" class="payment editMethodForm"  method="post" >
+													<form action="/Settingsexpense/updatePaymentMethod" class="editMethodForm"  method="post" >
 														<div class="form-group">
 															<div class="registrationInputWithIcon inputIconBg">
 																<input type = "text" class="form-control inputFinance" name="methodName" id="methodName"  value = "{{item.name}}"  require/>
-																<i class="fa fa-dollar"  aria-hidden="true"></i>
+																<i class="fa fa-credit-card"  aria-hidden="true"></i>
 															</div>
 														</div>
 														<div class="form-group">
@@ -141,7 +149,7 @@
 													<h5 class="modal-title" id="deleteModalLabel">Potwierdzenie usunięcia metody płatności:</h5>
 												  </div>
 												  <div class="modal-body">
-													<form action="/Settingsexpense/deletePaymentMethod" class="payment deleteForm" method="post" >
+													<form action="/Settingsexpense/deletePaymentMethod" id="deleteMethodForm" method="post" >
 														<div class="form-group">
 															<p style="text-align:left">Czy na pewno chcesz usunąć metodę płatności: "{{item.name}}" ?</p> 
 															<input type = "hidden" id = "deletePaymentMethod"  name = "deletePaymentMethod" value = "{{item.name}}" />
@@ -172,11 +180,11 @@
 						<h5 class="modal-title" id="exampleModalLabel">Nowa metoda płatności:</h5>
 					  </div>
 					  <div style="text-align:left"  class="modal-body">
-						<form  action="/Settingsexpense/addPaymentMethod" id="addMethodForm"  class="payment"  method="post" >
+						<form  action="/Settingsexpense/addPaymentMethod" id="addMethodForm" method="post" >
 							<div class="form-group">
 								<div class="registrationInputWithIcon inputIconBg">
 									<input type = "text" class="form-control inputFinance" id="methodName"  name="methodName" placeholder="metoda" require/>
-									<i class="fa fa-dollar"  aria-hidden="true"></i>
+									<i class="fa fa-credit-card"  aria-hidden="true"></i>
 								</div>
 							</div>
 							<div class="modal-footer">

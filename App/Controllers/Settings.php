@@ -39,7 +39,7 @@ class Settings extends Authenticated
 			
 			Flash::addMessage('Niestety! Nie udało się edytować hasła', Flash::WARNING);		
 			
-            View::renderTemplate('settings/index.html', [
+            View::renderTemplate('Settings/index.html', [
                 'user' => $this->user
             ]);
 
@@ -56,7 +56,7 @@ class Settings extends Authenticated
 			
 			Flash::addMessage('Niestety! Nie udało się edytować profilu', Flash::WARNING);		
 			
-            View::renderTemplate('settings/index.html', [
+            View::renderTemplate('Settings/index.html', [
                 'user' => $this->user
             ]);
 
@@ -74,7 +74,7 @@ class Settings extends Authenticated
 			
 			Flash::addMessage('Niestety! Nie udało się usunąć przychodów i wydatków', Flash::WARNING);		
 			
-            View::renderTemplate('settings/index.html', [
+            View::renderTemplate('Settings/index.html', [
                 'user' => $this->user
             ]);
 
@@ -94,7 +94,7 @@ class Settings extends Authenticated
 			
 			Flash::addMessage('Niestety! Nie udało się usunąć konta', Flash::WARNING);		
 			
-            View::renderTemplate('settings/index.html', [
+            View::renderTemplate('Settings/index.html', [
                 'user' => $this->user
             ]);
 
