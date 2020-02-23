@@ -30,7 +30,9 @@ class Settingsincome extends Authenticated
 
 		if (Income::deleteUserCategory($_POST['deleteIncomeCategory'])) {
 			
-			Flash::addMessage('Sukces! Kategoria została poprawnie usunięta!');		
+			Flash::addMessage('Sukces! Kategoria została poprawnie usunięta!');	
+			
+			die;
 
         } else {
 			
@@ -58,7 +60,9 @@ class Settingsincome extends Authenticated
 
         if ($income->saveNewCategory()) {
 			
-			Flash::addMessage('Sukces! Nazwa kategorii została poprawnie dodana!');		
+			Flash::addMessage('Sukces! Nazwa kategorii została poprawnie dodana!');
+
+			die;
 
         } else {
 			
@@ -79,6 +83,8 @@ class Settingsincome extends Authenticated
         if ($income->updateCategory()) {
 
             Flash::addMessage('Zmiany zapisane!');
+			
+			die;
 
         } else {
 			

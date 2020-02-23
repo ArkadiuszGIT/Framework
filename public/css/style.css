@@ -243,14 +243,14 @@ input[type=date]:focus
 	background-color: darkred;
 	color: white;
 }
-.menu
- {
+.menuWindow
+{
+	background-image: url("/img/green_gobbler.png");
     margin: auto;
 	padding: 15px;
 	padding-bottom:40px;
 	border-radius: 5px;
 	border: 2px solid #0D533E;
-	background-image: url("img/green_gobbler.png");
 }
 
 .menuButton
