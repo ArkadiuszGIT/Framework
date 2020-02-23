@@ -45,6 +45,6 @@ class Config
 		*@var boolean
 		*/
 	
-	const SECRET_KEY = 'mTAG49mzoNVSjHXYGQepG5188a3eJxLh';
+	const SECRET_KEY = 'your-secret-key';
 	
 }

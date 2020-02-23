@@ -50,7 +50,7 @@
 									url: form.action,
 									type: form.method,
 									data:	$(form).serialize(),
-									success: function(response) {
+									success: function() {
 										$(form).load("/Settingsexpense/modalSuccess");
 									}
 								});					
@@ -58,7 +58,7 @@
 						});
 					})	
 					
-					$("#addExpenseCategoryForm").validate({
+					$(".addExpenseCategoryForm").validate({
 						rules: {
 							categoryName: {
 								required: true,
@@ -80,14 +80,14 @@
 								url: form.action,
 								type: form.method,
 								data:	$(form).serialize(),
-								success: function(response) {
+								success: function() {
 									$(form).load("/Settingsexpense/modalSuccess");
 								}
 							});					
 						}
 					});
 					
-					$('form#deleteExpenseForm').on('submit', function(){
+					$('.deleteExpenseForm').on('submit', function(){
 						var that = $(this);
 						url = that.attr('action'),
 						type = that.attr('method'),
@@ -97,7 +97,7 @@
 							url: url,
 							type: type,
 							data:	$(that).serialize(),
-							success: function(response) {
+							success: function() {
 								$(that).load("/Settingsexpense/modalSuccess");
 							}
 						});
@@ -120,7 +120,7 @@
 						{% for item in category %}
 							{% if item.name !="Inne" %}
 								<tr>
-									<td style="text-align:left"><input type="checkbox" name="{{item.name}}"/>{{item.name}}</br>
+									<td style="text-align:left">{{item.name}}</br>
 											{% if item.expenseLimit is not empty %}
 													Limit: {{item.expenseLimit}}
 											{% endif %}						
@@ -171,7 +171,7 @@
 													<h5 class="modal-title" id="deleteModalLabel">Potwierdzenie usunięcia kategorii:</h5>
 												  </div>
 												  <div class="modal-body">
-													<form action="/Settingsexpense/deleteExpenseCategory" id="deleteExpenseForm" method="post" >
+													<form action="/Settingsexpense/deleteExpenseCategory" class="deleteExpenseForm" method="post" >
 														<div class="form-group">
 															<p style="text-align:left">Czy na pewno chcesz usunąć kategorię: "{{item.name}}" ?</p> 
 															<input type = "hidden" id = "deleteExpenseCategory"  name = "deleteExpenseCategory" value = "{{item.name}}" />
@@ -202,7 +202,7 @@
 						<h5 class="modal-title" id="exampleModalLabel">Nowa kategoria:</h5>
 					  </div>
 					  <div style="text-align:left"  class="modal-body">
-						<form  action="/Settingsexpense/addExpenseCategory" id="addExpenseCategoryForm" method="post" >
+						<form  action="/Settingsexpense/addExpenseCategory" class="addExpenseCategoryForm" method="post" >
 							<div class="form-group">
 								<div class="registrationInputWithIcon inputIconBg">
 									<input type = "text" class="form-control inputFinance" id="categoryName"  name="categoryName" placeholder="kategoria" require/>

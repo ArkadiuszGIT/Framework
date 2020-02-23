@@ -39,7 +39,7 @@
 									url: form.action,
 									type: form.method,
 									data:	$(form).serialize(),
-									success: function(response) {
+									success: function() {
 										$(form).load("/Settingsexpense/modalPaymentSuccess");
 									}
 								});					
@@ -47,7 +47,7 @@
 						});
 					})	
 					
-					$("#addMethodForm").validate({
+					$(".addMethodForm").validate({
 						rules: {
 							methodName: {
 								required: true,
@@ -69,14 +69,14 @@
 								url: form.action,
 								type: form.method,
 								data:	$(form).serialize(),
-								success: function(response) {
+								success: function() {
 									$(form).load("/Settingsexpense/modalPaymentSuccess");
 								}
 							});					
 						}
 					});
 					
-					$('form#deleteMethodForm').on('submit', function(){
+					$('.deleteMethodForm').on('submit', function(){
 						var that = $(this);
 						url = that.attr('action'),
 						type = that.attr('method'),
@@ -86,7 +86,7 @@
 							url: url,
 							type: type,
 							data:	$(that).serialize(),
-							success: function(response) {
+							success: function() {
 								$(that).load("/Settingsexpense/modalPaymentSuccess");
 							}
 						});
@@ -109,7 +109,7 @@
 						{% for item in payment %}
 							{% if item.name !="Inne" %}
 								<tr>
-									<td style="text-align:left"><input type="checkbox" name="{{item.name}}"/>{{item.name}}</td>
+									<td style="text-align:left">{{item.name}}</td>
 									<td class="text-right">
 										<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editPaymentMethod{{loop.index}}" data-backdrop="static" data-keyboard="false"><i class="fa fa-pencil"  aria-hidden="true"></i></button>
 										
@@ -149,7 +149,7 @@
 													<h5 class="modal-title" id="deleteModalLabel">Potwierdzenie usunięcia metody płatności:</h5>
 												  </div>
 												  <div class="modal-body">
-													<form action="/Settingsexpense/deletePaymentMethod" id="deleteMethodForm" method="post" >
+													<form action="/Settingsexpense/deletePaymentMethod" class="deleteMethodForm" method="post" >
 														<div class="form-group">
 															<p style="text-align:left">Czy na pewno chcesz usunąć metodę płatności: "{{item.name}}" ?</p> 
 															<input type = "hidden" id = "deletePaymentMethod"  name = "deletePaymentMethod" value = "{{item.name}}" />
@@ -180,7 +180,7 @@
 						<h5 class="modal-title" id="exampleModalLabel">Nowa metoda płatności:</h5>
 					  </div>
 					  <div style="text-align:left"  class="modal-body">
-						<form  action="/Settingsexpense/addPaymentMethod" id="addMethodForm" method="post" >
+						<form  action="/Settingsexpense/addPaymentMethod" class="addMethodForm" method="post" >
 							<div class="form-group">
 								<div class="registrationInputWithIcon inputIconBg">
 									<input type = "text" class="form-control inputFinance" id="methodName"  name="methodName" placeholder="metoda" require/>

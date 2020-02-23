@@ -39,15 +39,16 @@
 									url: form.action,
 									type: form.method,
 									data:	$(form).serialize(),
-									success: function(response) {
+									success: function() {
 										$(form).load("/Settingsincome/modalSuccess");
+										wp_die();
 									}
 								});					
 							}
 						});
 					})	
 					
-					$("#addIncomeCategoryForm").validate({
+					$(".addIncomeCategoryForm").validate({
 						rules: {
 							categoryName: {
 								required: true,
@@ -69,14 +70,15 @@
 								url: form.action,
 								type: form.method,
 								data:	$(form).serialize(),
-								success: function(response) {
+								success: function() {
 									$(form).load("/Settingsincome/modalSuccess");
+									wp_die();
 								}
 							});					
 						}
 					});
 					
-					$('form#deleteIncomeForm').on('submit', function(){
+					$('.deleteIncomeForm').on('submit', function(){
 						var that = $(this);
 						url = that.attr('action'),
 						type = that.attr('method'),
@@ -86,8 +88,9 @@
 							url: url,
 							type: type,
 							data:	$(that).serialize(),
-							success: function(response) {
+							success: function() {
 								$(that).load("/Settingsincome/modalSuccess");
+								wp_die();
 							}
 						});
 
@@ -109,7 +112,7 @@
 						{% for item in category %}
 							{% if item.name !="Inne" %}
 								<tr>
-									<td style="text-align:left"><input type="checkbox" name="{{item.name}}"/>{{item.name}}</td>
+									<td style="text-align:left">{{item.name}}</td>
 									<td class="text-right">
 										<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editIncome{{loop.index}}" data-backdrop="static" data-keyboard="false"><i class="fa fa-pencil"  aria-hidden="true"></i></button>
 										
@@ -149,7 +152,7 @@
 													<h5 class="modal-title" id="deleteModalLabel">Potwierdzenie usunięcia kategorii:</h5>
 												  </div>
 												  <div class="modal-body">
-													<form action="/Settingsincome/deleteIncomeCategory" id="deleteIncomeForm" method="post" >
+													<form action="/Settingsincome/deleteIncomeCategory" class="deleteIncomeForm" method="post" >
 														<div class="form-group">
 															<p style="text-align:left">Czy na pewno chcesz usunąć kategorię: "{{item.name}}" ?</p> 
 															<input type = "hidden" id = "deleteIncomeCategory"  name = "deleteIncomeCategory" value = "{{item.name}}" />
@@ -180,7 +183,7 @@
 						<h5 class="modal-title" id="exampleModalLabel">Nowa kategoria:</h5>
 					  </div>
 					  <div style="text-align:left"  class="modal-body">
-						<form  action="/Settingsincome/addIncomeCategory" id="addIncomeCategoryForm"  method="post" >
+						<form  action="/Settingsincome/addIncomeCategory" class="addIncomeCategoryForm"  method="post" >
 							<div class="form-group">
 								<div class="registrationInputWithIcon inputIconBg">
 									<input type = "text" class="form-control inputFinance" id="categoryName"  name="categoryName" placeholder="kategoria" require/>

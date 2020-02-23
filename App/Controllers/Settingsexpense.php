@@ -77,7 +77,9 @@ class Settingsexpense extends Authenticated
 
 		if (Expense::deleteUserCategory($_POST['deleteExpenseCategory'])) {
 			
-			Flash::addMessage('Sukces! Kategoria została poprawnie usunięta!');		
+			Flash::addMessage('Sukces! Kategoria została poprawnie usunięta!');	
+
+			die;	
 
         } else {
 			
@@ -105,7 +107,9 @@ class Settingsexpense extends Authenticated
 
         if ($expense->saveNewCategory()) {
 			
-			Flash::addMessage('Sukces! Nazwa kategorii została poprawnie dodana!');		
+			Flash::addMessage('Sukces! Nazwa kategorii została poprawnie dodana!');	
+
+			die;
 
         } else {
 			
@@ -125,7 +129,9 @@ class Settingsexpense extends Authenticated
 		 
         if ($expense->updateCategory()) {
 
-            Flash::addMessage('Zmiany zapisane!');
+            Flash::addMessage('Zmiany zapisane!');		  
+
+			die;
 
         } else {
 			
@@ -149,7 +155,9 @@ class Settingsexpense extends Authenticated
 
 		if (Expense::deleteUserPaymentMethod($_POST['deletePaymentMethod'])) {
 			
-			Flash::addMessage('Sukces! Metoda płątności została poprawnie usunięta!');		
+			Flash::addMessage('Sukces! Metoda płątności została poprawnie usunięta!');	
+			
+			die;
 
         } else {
 			
@@ -177,7 +185,9 @@ class Settingsexpense extends Authenticated
 
         if ($expense->saveNewPaymentMethod()) {
 			
-			Flash::addMessage('Sukces! Nazwa metody płatności została poprawnie dodana!');		
+			Flash::addMessage('Sukces! Nazwa metody płatności została poprawnie dodana!');	
+
+			die;
 
         } else {
 			
@@ -198,6 +208,8 @@ class Settingsexpense extends Authenticated
         if ($expense->updatePaymentMethod()) {
 
             Flash::addMessage('Zmiany zapisane!');
+			
+			die;
 
         } else {
 			
